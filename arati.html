@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Arati Devotion</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+            --glass-bg: rgba(7, 30, 61, 0.75);
+            --glass-border: rgba(241, 196, 15, 0.3);
+        }
+
+        /* --- Reset & Base Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        /* --- Ambient Temple Room Canvas --- */
+        #temple-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .temple-sunlight-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(254, 211, 48, 0.12) 0%, rgba(2, 11, 20, 0) 60%);
+        }
+
+        /* --- App Container --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(241, 196, 15, 0.1);
+            border-color: var(--gold-light);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cinzel', serif;
+            background: rgba(243, 156, 18, 0.15);
+            border: 1px solid var(--gold-primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .btn-icon:hover {
+            box-shadow: 0 0 10px var(--gold-glow);
+            background: rgba(241,196,15,0.1);
+        }
+
+        /* --- Workspace Architecture --- */
+        .workspace-grid {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+            flex-grow: 1;
+            align-items: stretch;
+            min-height: 0;
+        }
+
+        @media (max-width: 950px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+        }
+
+        /* --- Left Side: Main Altar --- */
+        .main-altar {
+            background: rgba(4, 19, 41, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Traditional Temple Room Features */
+        .altar-curtain {
+            position: absolute;
+            top: 0;
+            width: 60px;
+            height: 100%;
+            background: linear-gradient(90deg, #b33921 0%, #d63031 70%, #871804 100%);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            z-index: 4;
+            transition: transform 1s ease;
+        }
+        .curtain-left { left: 0; border-radius: 0 8px 8px 0; }
+        .curtain-right { right: 0; border-radius: 8px 0 0 8px; }
+
+        .temple-bell-rig {
+            position: absolute;
+            top: -10px;
+            left: 20%;
+            width: 2px;
+            height: 80px;
+            background: #aaa;
+            z-index: 5;
+            transform-origin: top center;
+        }
+        .bell-body {
+            position: absolute;
+            bottom: -24px;
+            left: -12px;
+            width: 26px;
+            height: 30px;
+            background: linear-gradient(135deg, #f1c40f, #d35400);
+            border: 1px solid var(--gold-light);
+            border-radius: 6px 6px 2px 2px;
+        }
+        @keyframes swayBell {
+            0%, 100% { transform: rotate(0deg); }
+            30% { transform: rotate(12deg); }
+            60% { transform: rotate(-10deg); }
+            80% { transform: rotate(4deg); }
+        }
+
+        /* Speech/Response Module */
+        .speech-bubble {
+            position: absolute;
+            top: 25px;
+            background: var(--text-light);
+            color: var(--deep-blue);
+            padding: 10px 18px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            max-width: 240px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+            z-index: 15;
+            text-align: center;
+        }
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--text-light) transparent;
+        }
+        .speech-bubble.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Seated Avatar Architecture */
+        .throne-container {
+            height: 290px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 30px;
+        }
+
+        .divine-throne {
+            position: absolute;
+            bottom: 0;
+            width: 220px;
+            height: 65px;
+            background: linear-gradient(0deg, #4a2711 0%, #783e19 100%);
+            border: 3px solid var(--gold-primary);
+            border-radius: 12px 12px 4px 4px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            z-index: 2;
+        }
+        .throne-back {
+            position: absolute;
+            bottom: 45px;
+            width: 190px;
+            height: 150px;
+            background: radial-gradient(circle, #b33921 40%, #7f1d0c 100%);
+            border: 4px solid var(--gold-light);
+            border-radius: 50% 50% 0 0;
+            z-index: 1;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        .krishna-avatar {
+            width: 150px;
+            height: 220px;
+            z-index: 3;
+            transform-origin: bottom center;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-bottom: 15px;
+        }
+
+        /* Action/Interaction Arena Frame Overlay */
+        .interaction-arena {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 8;
+            cursor: none;
+        }
+        .interaction-arena.inactive {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* Pointer Follower Node Element */
+        #interactive-follower {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            pointer-events: none;
+            z-index: 20;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #interactive-follower svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 8px var(--gold-glow));
+        }
+
+        /* Fixed Worship Accessories Layer */
+        .altar-accessories {
+            width: 80%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(241,196,15,0.2);
+            padding-top: 12px;
+            z-index: 5;
+        }
+        .brass-lamp-fixed {
+            width: 30px;
+            height: 45px;
+            background: linear-gradient(180deg, #f1c40f, #d35400);
+            border-radius: 4px;
+            position: relative;
+        }
+        .brass-lamp-fixed::before {
+            content: "";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 12px;
+            background: #e67e22;
+            border-radius: 50% 50% 20% 20%;
+            animation: flameFlicker 0.15s infinite alternate;
+        }
+        @keyframes flameFlicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.9; }
+            100% { transform: translateX(-50%) scale(1.15) skewX(3deg); opacity: 1; filter: drop-shadow(0 0 4px #f1c40f); }
+        }
+
+        /* --- Right Side: Controls & Progress Tracking --- */
+        .control-sanctuary {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Progress Dashboard Container */
+        .progress-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .progress-card h4 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-align: center;
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+            padding-bottom: 6px;
+        }
+        .progress-indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .progress-dot {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 4px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #a4b0be;
+            transition: all 0.4s;
+        }
+        .progress-dot.completed {
+            border-color: var(--gold-primary);
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--gold-light);
+            box-shadow: 0 0 8px rgba(241,196,15,0.2);
+        }
+
+        /* Arati Items Inventory Cards Selector */
+        .items-deck-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            color: var(--gold-light);
+            letter-spacing: 1px;
+            margin-left: 5px;
+        }
+        .items-deck-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        @media (max-width: 950px) {
+            .items-deck-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                overflow-y: visible;
+            }
+        }
+
+        .arati-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .arati-card:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+            transform: translateY(-3px);
+        }
+        .arati-card.active-offering {
+            background: linear-gradient(180deg, rgba(10, 61, 98, 0.8), rgba(7, 30, 61, 0.9));
+            border-color: var(--gold-light);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+        .arati-card.done::after {
+            content: "✓";
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            color: var(--gold-light);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .arati-card svg {
+            width: 42px;
+            height: 42px;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        .arati-card span {
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        /* --- Master Action/Completion Infrastructure --- */
+        .completion-banner-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .completion-status {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.5rem;
+            color: var(--gold-light);
+            text-shadow: 0 0 15px var(--gold-glow);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease;
+            text-align: center;
+            display: none;
+        }
+        .completion-status.visible {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .action-row-buttons {
+            display: none;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .action-row-buttons.visible {
+            display: flex;
+        }
+        .btn-premium {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            background: linear-gradient(135deg, #1e3799, var(--peacock-blue));
+            border: 2px solid var(--gold-primary);
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+        }
+        .btn-premium:hover {
+            color: #020b14;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="temple-canvas"></canvas>
+    <div class="temple-sunlight-overlay"></div>
+
+    <div class="app-container">
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="window.history.back();">← HOME</button>
+                <h1 class="page-title">PERFORM ARATI</h1>
+            </div>
+            <div class="nav-right">
+                <div class="streak-badge">
+                    <span>✨ ARATI STREAK:</span>
+                    <span id="streak-counter-node">0</span> Days
+                </div>
+                <button class="btn-icon" title="Toggle Ambience Elements" onclick="handleIconConfigClick()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="workspace-grid">
+            
+            <div class="main-altar" id="altar-sanctuary-frame">
+                <div class="altar-curtain curtain-left"></div>
+                <div class="altar-curtain curtain-right"></div>
+                
+                <div class="temple-bell-rig" id="altar-bell-node">
+                    <div class="bell-body"></div>
+                </div>
+
+                <div class="speech-bubble" id="krishna-speech-node">...</div>
+
+                <div class="throne-container">
+                    <div class="throne-back"></div>
+                    <svg class="krishna-avatar" id="krishna-avatar-svg" viewBox="0 0 100 150">
+                        <path d="M32 35 L50 6 L68 35 Z" fill="#f1c40f" stroke="#f39c12" stroke-width="1.5" />
+                        <circle cx="50" cy="18" r="3.5" fill="#e74c3c"/>
+                        <path id="peacock-feather" d="M50 6 Q65 -12 58 -22 Q42 -12 50 6" fill="#009432" stroke="#0652dd" stroke-width="1"/>
+                        <circle cx="52" cy="-8" r="3" fill="#0652dd"/>
+                        
+                        <circle cx="50" cy="46" r="19" fill="#2c3e50"/> <circle id="krishna-face" cx="50" cy="49" r="15" fill="#74b9ff"/> <path d="M48 37 L52 37 L50 46 Z" fill="#fff"/>
+                        <circle cx="50" cy="44" r="1.5" fill="#e74c3c"/>
+                        <path id="eye-l" d="M41 48 Q44 45 47 48" fill="none" stroke="#1e272e" stroke-width="1.5"/>
+                        <path id="eye-r" d="M53 48 Q56 45 59 48" fill="none" stroke="#1e272e" stroke-width="1.5"/>
+                        <path id="krishna-smile" d="M45 55 Q50 60 55 55" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+
+                        <path d="M34 65 L66 65 L62 105 L38 105 Z" fill="#74b9ff"/>
+                        <path d="M35 65 Q50 90 65 65" fill="none" stroke="#ff7675" stroke-width="4" stroke-dasharray="5 3"/>
+                        <path d="M38 65 Q50 82 62 65" fill="none" stroke="#fff" stroke-width="2"/>
+                        
+                        <path d="M32 100 L68 100 L72 135 L28 135 Z" fill="#f1c40f"/>
+                        <path d="M40 100 Q50 125 60 100" fill="none" stroke="#d35400" stroke-width="1.5"/>
+
+                        <rect id="divine-flute" x="28" y="52" width="48" height="4" rx="2" fill="#d35400" transform="rotate(-8 50 54)" style="display:none;"/>
+                    </svg>
+                    <div class="divine-throne"></div>
+                </div>
+
+                <div class="interaction-arena inactive" id="gesture-arena-layer"></div>
+
+                <div id="interactive-follower"></div>
+
+                <div class="altar-accessories">
+                    <div class="brass-lamp-fixed"></div>
+                    <div style="width:8px; height:30px; background:#7f8c8d; position:relative; border-radius:2px;">
+                        <div style="position:absolute; top:-15px; left:3px; width:2px; height:15px; background:#555;"></div>
+                    </div>
+                    <div class="brass-lamp-fixed"></div>
+                </div>
+            </div>
+
+            <div class="control-sanctuary">
+                <div class="progress-card">
+                    <h4>DEVOTIONAL SEQUENCE</h4>
+                    <div class="progress-indicator-grid" id="progress-indicator-box">
+                        <div class="progress-dot" id="dot-lamp">Lamp</div>
+                        <div class="progress-dot" id="dot-incense">Incense</div>
+                        <div class="progress-dot" id="dot-flowers">Flowers</div>
+                        <div class="progress-dot" id="dot-water">Water</div>
+                        <div class="progress-dot" id="dot-cloth">Cloth</div>
+                        <div class="progress-dot" id="dot-chamara">Chamara</div>
+                        <div class="progress-dot" id="dot-peacock">Fan</div>
+                    </div>
+                </div>
+
+                <h3 class="items-deck-title">SACRED ARATI UPACARAS</h3>
+                <div class="items-deck-grid" id="arati-items-deck">
+                    </div>
+            </div>
+        </main>
+
+        <footer class="completion-banner-container">
+            <div class="completion-status" id="completion-title-lbl">🌸 Arati Completed 🌸</div>
+            <div class="action-row-buttons" id="post-arati-controls">
+                <button class="btn-premium" onclick="resetAratiWorshipCycle()">PERFORM AGAIN</button>
+                <button class="btn-premium" onclick="window.history.back();">RETURN HOME</button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        /* --- Arati Items Configuration Matrix Repository --- */
+        const ARATI_UPACARAS = [
+            { id: "lamp", name: "Ghee Deepa", stroke: "#f1c40f", icon: `<svg viewBox="0 0 64 64"><path d="M16 40 Q32 52 48 40 L40 48 L24 48 Z" fill="#e67e22"/><path d="M32 16 Q38 28 32 36 Q26 28 32 16" fill="#f1c40f" filter="drop-shadow(0 0 5px #f39c12)"/></svg>` },
+            { id: "incense", name: "Dhupa Stick", stroke: "#bdc3c7", icon: `<svg viewBox="0 0 64 64"><rect x="30" y="36" width="4" height="24" rx="2" fill="#7f8c8d"/><path d="M32 12 Q36 20 32 28 Q28 20 32 12" fill="none" stroke="#dcdde1" stroke-width="2" stroke-linecap="round"/></svg>` },
+            { id: "flowers", name: "Pushpa Garland", stroke: "#ff7675", icon: `<svg viewBox="0 0 64 64"><circle cx="32" cy="24" r="8" fill="#ff7675"/><circle cx="20" cy="34" r="7" fill="#ff9f43"/><circle cx="44" cy="34" r="7" fill="#ff9f43"/><circle cx="32" cy="44" r="8" fill="#ff7675"/></svg>` },
+            { id: "water", name: "Arghya Sankha", stroke: "#3498db", icon: `<svg viewBox="0 0 64 64"><path d="M20 24 Q32 12 44 24 Q48 36 32 48 Q16 36 20 24 Z" fill="#f5f6fa" stroke="#dcdde1" stroke-width="2"/></svg>` },
+            { id: "cloth", name: "Vastra Garment", stroke: "#9b59b6", icon: `<svg viewBox="0 0 64 64"><path d="M16 20 L48 20 L44 52 L20 52 Z" fill="#9b59b6" stroke="#8e44ad" stroke-width="2"/></svg>` },
+            { id: "chamara", name: "Chamara Whisk", stroke: "#ecf0f1", icon: `<svg viewBox="0 0 64 64"><path d="M32 32 Q16 12 32 4 Q48 12 32 32" fill="#f5f6fa"/><rect x="30" y="32" width="4" height="26" rx="2" fill="#d35400"/></svg>` },
+            { id: "peacock", name: "Peacock Fan", stroke: "#2ecc71", icon: `<svg viewBox="0 0 64 64"><path d="M32 36 Q12 16 32 4 Q52 16 32 36" fill="#009432"/><path d="M32 28 Q20 16 32 8 Q44 16 32 28" fill="#0652dd"/><rect x="30" y="36" width="4" height="24" rx="2" fill="#d35400"/></svg>` }
+        ];
+
+        const DIVINE_GRACE_RESPONSES = [
+            "Your offering is beautiful, Sakha.",
+            "Thank you for your deep devotion.",
+            "May your heart always remember Me.",
+            "I accept your pure love with great joy."
+        ];
+
+        /* --- Local Context Tracking States --- */
+        let activeOfferingId = null;
+        let completedOfferingsList = [];
+        let gestureActiveState = false;
+        let totalWorshipActionPoints = 0;
+        let workflowLockdown = false;
+
+        /* --- Ambient Scenery Dynamics Canvas Render Processing Engine --- */
+        const canvas = document.getElementById('temple-canvas');
+        const ctx = canvas.getContext('2d');
+        let scenicEffectsArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class EnvironmentalParticle {
+            constructor(type, targetX = null, targetY = null) {
+                this.type = type; // 'petal', 'smoke', 'sparkle'
+                this.x = targetX !== null ? targetX : Math.random() * canvas.width;
+                this.y = targetY !== null ? targetY : (type === 'petal' ? -20 : Math.random() * canvas.height);
+                this.size = Math.random() * 4 + 2;
+                this.speedY = type === 'petal' ? (Math.random() * 0.8 + 0.4) : -(Math.random() * 0.5 + 0.3);
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.angle = Math.random() * Math.PI;
+                this.hue = type === 'sparkle' ? 45 : (type === 'petal' ? 350 : 200);
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if(this.type === 'smoke') {
+                    this.alpha -= 0.003;
+                    this.size += 0.04;
+                }
+                if (this.y < -40 || this.y > canvas.height + 40 || this.x < -40 || this.x > canvas.width + 40 || this.alpha <= 0) {
+                    this.reset();
+                }
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : canvas.height + 20;
+                this.size = Math.random() * 4 + 2;
+                this.alpha = Math.random() * 0.5 + 0.3;
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                if(this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#ff7675";
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size * 1.4, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if(this.type === 'smoke') {
+                    ctx.fillStyle = "rgba(220, 221, 225, 0.15)";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Soft Golden Particle Sparkle Spark
+                    ctx.fillStyle = `hsla(${this.hue}, 90%, 60%, 0.8)`;
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = "#f1c40f";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 0.6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Populates Initial Baseline Particle Matrix Frame Array
+        for(let i=0; i<25; i++) scenicEffectsArray.push(new EnvironmentalParticle('sparkle'));
+        for(let i=0; i<15; i++) scenicEffectsArray.push(new EnvironmentalParticle('petal'));
+
+        function runTempleGraphicsEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Build rich deep gradient for the sanctuary walls space backdrop
+            let wallGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            wallGrad.addColorStop(0, '#041426');
+            wallGrad.addColorStop(1, '#010812');
+            ctx.fillStyle = wallGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let node of scenicEffectsArray) {
+                node.update();
+                node.draw();
+            }
+            requestAnimationFrame(runTempleGraphicsEngine);
+        }
+        runTempleGraphicsEngine();
+
+        /* --- Initialization & Synchronous LocalStorage Handlers --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            renderUpacarasInterfaceDeck();
+            syncStorageStatistics();
+            initializeCharacterBehaviorEngine();
+            setupInteractiveArenaTrackers();
+        });
+
+        function syncStorageStatistics() {
+            let currentStreak = parseInt(localStorage.getItem("arati_streak") || "0");
+            document.getElementById("streak-counter-node").innerText = currentStreak;
+        }
+
+        function renderUpacarasInterfaceDeck() {
+            const grid = document.getElementById("arati-items-deck");
+            grid.innerHTML = "";
+            ARATI_UPACARAS.forEach(item => {
+                let card = document.createElement("div");
+                card.className = "arati-card";
+                card.id = `upacara-card-${item.id}`;
+                card.onclick = () => activateWorshipUpacara(item.id);
+                card.innerHTML = `
+                    ${item.icon}
+                    <span>${item.name}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /* --- Dynamic Interactive Worship Core Engines --- */
+        function activateWorshipUpacara(itemId) {
+            if (workflowLockdown || completedOfferingsList.includes(itemId)) return;
+
+            // Toggle old states
+            if (activeOfferingId) {
+                document.getElementById(`upacara-card-${activeOfferingId}`).classList.remove("active-offering");
+            }
+
+            activeOfferingId = itemId;
+            document.getElementById(`upacara-card-${itemId}`).classList.add("active-offering");
+
+            // Extract matching configuration markup template vector graphics asset icon 
+            const upacara = ARATI_UPACARAS.find(u => u.id === itemId);
+            const follower = document.getElementById("interactive-follower");
+            follower.innerHTML = upacara.icon;
+            follower.style.opacity = "1";
+
+            // Open Arena Trackers
+            const arena = document.getElementById("gesture-arena-layer");
+            arena.classList.remove("inactive");
+            gestureActiveState = false; 
+            totalWorshipActionPoints = 0;
+        }
+
+        function setupInteractiveArenaTrackers() {
+            const arena = document.getElementById("gesture-arena-layer");
+            const follower = document.getElementById("interactive-follower");
+            const sanctum = document.getElementById("altar-sanctuary-frame");
+
+            function handleMoveEvent(clientX, clientY) {
+                if (!activeOfferingId) return;
+                
+                const bounds = sanctum.getBoundingClientRect();
+                const x = clientX - bounds.left;
+                const y = clientY - bounds.top;
+
+                follower.style.left = `${x}px`;
+                follower.style.top = `${y}px`;
+
+                if (!gestureActiveState) {
+                    gestureActiveState = true;
+                    return;
+                }
+
+                // Accumulate movement progress increments points
+                totalWorshipActionPoints += 1;
+
+                // Emit specialized contextual micro particles trails onto the main canvas grid dynamically
+                if (totalWorshipActionPoints % 3 === 0) {
+                    if (activeOfferingId === 'lamp' || activeOfferingId === 'peacock') {
+                        scenicEffectsArray.push(new EnvironmentalParticle('sparkle', clientX, clientY));
+                    } else if (activeOfferingId === 'incense') {
+                        scenicEffectsArray.push(new EnvironmentalParticle('smoke', clientX, clientY));
+                    } else if (activeOfferingId === 'flowers') {
+                        scenicEffectsArray.push(new EnvironmentalParticle('petal', clientX, clientY));
+                    }
+                }
+
+                if (totalWorshipActionPoints >= 140) {
+                    commitWorshipUpacaraStepSuccess();
+                }
+            }
+
+            arena.addEventListener("mousemove", (e) => handleMoveEvent(e.clientX, e.clientY));
+            arena.addEventListener("touchmove", (e) => {
+                if(e.touches.length > 0) {
+                    handleMoveEvent(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+        }
+
+        function commitWorshipUpacaraStepSuccess() {
+            const targetId = activeOfferingId;
+            activeOfferingId = null;
+            gestureActiveState = false;
+
+            document.getElementById("interactive-follower").style.opacity = "0";
+            document.getElementById("gesture-arena-layer").classList.add("inactive");
+
+            const card = document.getElementById(`upacara-card-${targetId}`);
+            card.classList.remove("active-offering");
+            card.classList.add("done");
+
+            completedOfferingsList.push(targetId);
+            document.getElementById(`dot-${targetId}`).classList.add("completed");
+
+            // Perform individual item ring bells audio/visual queues instantly
+            document.getElementById("altar-bell-node").style.animation = "swayBell 0.8s ease-in-out";
+            setTimeout(() => { document.getElementById("altar-bell-node").style.animation = "none"; }, 800);
+
+            triggerCharacterHappyReaction();
+
+            if (completedOfferingsList.length === ARATI_UPACARAS.length) {
+                executeGrandMahaAratiCompletion();
+            }
+        }
+
+        /* --- Grand Finale Celebration Routine --- */
+        function executeGrandMahaAratiCompletion() {
+            workflowLockdown = true;
+
+            // Swing bells continuously
+            document.getElementById("altar-bell-node").style.animation = "swayBell 3s ease-in-out infinite";
+
+            // Spawn rich massive beautiful flowers showers cascades onto screen matrix
+            for (let i = 0; i < 45; i++) {
+                setTimeout(() => {
+                    scenicEffectsArray.push(new EnvironmentalParticle('petal'));
+                    scenicEffectsArray.push(new EnvironmentalParticle('sparkle'));
+                }, i * 60);
+            }
+
+            setTimeout(() => {
+                document.getElementById("altar-bell-node").style.animation = "none";
+                setAvatarAnimationState('foldHands');
+
+                const speech = document.getElementById("krishna-speech-node");
+                speech.innerText = DIVINE_GRACE_RESPONSES[Math.floor(Math.random() * DIVINE_GRACE_RESPONSES.length)];
+                speech.classList.add("visible");
+
+                document.getElementById("completion-title-lbl").classList.add("visible");
+                document.getElementById("post-arati-controls").classList.add("visible");
+
+                processWorshipStreakStorageMetrics();
+            }, 3200);
+        }
+
+        function processWorshipStreakStorageMetrics() {
+            const todayKey = new Date().toDateString();
+            let lastSavedDate = localStorage.getItem("arati_last_date");
+            let streak = parseInt(localStorage.getItem("arati_streak") || "0");
+            let total = parseInt(localStorage.getItem("arati_total") || "0");
+
+            total += 1;
+            localStorage.setItem("arati_total", total.toString());
+
+            if (lastSavedDate !== todayKey) {
+                let yesterdayKey = new Date(Date.now() - 86400000).toDateString();
+                if (lastSavedDate === yesterdayKey || streak === 0) {
+                    streak += 1;
+                } else {
+                    streak = 1;
+                }
+                localStorage.setItem("arati_streak", streak.toString());
+                localStorage.setItem("arati_last_date", todayKey);
+                document.getElementById("streak-counter-node").innerText = streak;
+            }
+        }
+
+        /* --- Seated Avatar Behavioral Micro-Animations Loops Matrix --- */
+        const dynamicStatesPool = ['smile', 'blink', 'playFlute', 'foldHands', 'lookAround'];
+        let lastPlayedState = "";
+
+        function initializeCharacterBehaviorEngine() {
+            if (workflowLockdown) return;
+
+            let availablePool = dynamicStatesPool.filter(st => st !== lastPlayedState);
+            let targetState = availablePool[Math.floor(Math.random() * availablePool.length)];
+            lastPlayedState = targetState;
+
+            setAvatarAnimationState(targetState);
+            setTimeout(initializeCharacterBehaviorEngine, Math.random() * 4000 + 5000);
+        }
+
+        function setAvatarAnimationState(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            const flute = document.getElementById("divine-flute");
+            const avatarSvg = document.getElementById("krishna-avatar-svg");
+
+            // Reset Default Structural Vector Dimensions safely
+            elL.setAttribute("d", "M41 48 Q44 45 47 48");
+            elR.setAttribute("d", "M53 48 Q56 45 59 48");
+            smile.setAttribute("d", "M45 55 Q50 60 55 55");
+            flute.style.display = "none";
+            avatarSvg.style.transform = "scale(1)";
+
+            switch (state) {
+                case 'blink':
+                    elL.setAttribute("d", "M41 48 L47 48");
+                    elR.setAttribute("d", "M53 48 L58 48");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M43 54 Q50 62 57 54");
+                    avatarSvg.style.transform = "scale(1.02)";
+                    break;
+                case 'playFlute':
+                    flute.style.display = "block";
+                    smile.setAttribute("d", "M47 55 Q50 57 53 55");
+                    break;
+                case 'foldHands':
+                    smile.setAttribute("d", "M42 53 Q50 62 58 53");
+                    avatarSvg.style.transform = "scale(1.04)";
+                    break;
+                case 'lookAround':
+                    elL.setAttribute("d", "M43 48 Q46 45 49 48");
+                    elR.setAttribute("d", "M55 48 Q58 45 61 48");
+                    break;
+            }
+        }
+
+        function triggerCharacterHappyReaction() {
+            setAvatarAnimationState('smile');
+            const bubble = document.getElementById("krishna-speech-node");
+            bubble.innerText = "Wonderful gesture, Sakha...";
+            bubble.classList.add("visible");
+            setTimeout(() => { if(!workflowLockdown) bubble.classList.remove("visible"); }, 2000);
+        }
+
+        function resetAratiWorshipCycle() {
+            completedOfferingsList = [];
+            activeOfferingId = null;
+            workflowLockdown = false;
+
+            document.getElementById("completion-title-lbl").classList.remove("visible");
+            document.getElementById("post-arati-controls").classList.remove("visible");
+            document.getElementById("krishna-speech-node").classList.remove("visible");
+
+            document.querySelectorAll(".progress-dot").forEach(dot => dot.classList.remove("completed"));
+            
+            renderUpacarasInterfaceDeck();
+            setAvatarAnimationState('smile');
+            initializeCharacterBehaviorEngine();
+        }
+
+        function handleIconConfigClick() {
+            // Instantly summon decorative cosmic blessing spark waves over the view area context safely
+            for(let i=0; i<15; i++) {
+                scenicEffectsArray.push(new EnvironmentalParticle('sparkle'));
+            }
+        }
+    </script>
+</body>
+</html>
