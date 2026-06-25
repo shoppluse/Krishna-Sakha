@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Premium Interactive Experience</title>
+    <style>
+        /* --- Premium Typography & Variables --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+        }
+
+        /* --- Reset & Base Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+        }
+
+        /* --- Background Canvas & Particles --- */
+        #ambient-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- Global UI & Layout --- */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+            transform: scale(1.05);
+            padding: 20px;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* --- Premium Utilities --- */
+        .gold-text {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-glow), 0 0 20px rgba(243, 156, 18, 0.4);
+            text-align: center;
+        }
+
+        .btn-premium {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            background: linear-gradient(135deg, #1e3799, var(--peacock-blue));
+            border: 2px solid var(--gold-primary);
+            padding: 14px 36px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(241, 196, 15, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .btn-premium:hover {
+            color: #020b14;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            box-shadow: 0 0 25px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-premium:active {
+            transform: translateY(1px);
+        }
+
+        /* Ornamental Borders */
+        .ornament-frame {
+            border: 2px solid var(--gold-primary);
+            padding: 30px;
+            position: relative;
+            background: rgba(7, 30, 61, 0.75);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .ornament-frame::before, .ornament-frame::after {
+            content: "✦";
+            position: absolute;
+            color: var(--gold-light);
+            font-size: 1.5rem;
+            text-shadow: 0 0 8px var(--gold-glow);
+        }
+        .ornament-frame::before { top: 10px; left: 14px; }
+        .ornament-frame::after { bottom: 10px; right: 14px; }
+
+        /* --- Screen 1: Main Menu --- */
+        #menu-screen h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+        #menu-screen .subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: #a4b0be;
+            margin-bottom: 40px;
+            letter-spacing: 4px;
+        }
+        .peacock-feather-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 12px var(--gold-glow));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        /* --- Screen 2: Character Selection --- */
+        .selection-container {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .card-profile {
+            background: rgba(10, 61, 98, 0.4);
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            border-radius: 6px;
+            padding: 20px;
+            width: 200px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .card-profile:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+            transform: translateY(-5px);
+            background: rgba(10, 61, 98, 0.7);
+        }
+        .card-profile.selected {
+            border-color: var(--gold-light);
+            background: linear-gradient(180deg, rgba(10, 61, 98, 0.8), rgba(7, 30, 61, 0.9));
+            box-shadow: 0 0 25px var(--gold-glow);
+        }
+        .card-profile h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            margin-bottom: 10px;
+        }
+        .card-profile p {
+            font-size: 0.85rem;
+            color: #dcdde1;
+            line-height: 1.4;
+        }
+
+        /* --- Screen 3: Dialogue Gameplay --- */
+        #game-screen {
+            justify-content: flex-end;
+            padding-bottom: 50px;
+        }
+        .dialogue-box {
+            width: 100%;
+            max-width: 850px;
+            background: linear-gradient(180deg, rgba(7, 30, 61, 0.95) 0%, rgba(2, 11, 20, 0.98) 100%);
+            border: 2px solid var(--gold-primary);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 15;
+        }
+        .speaker-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--gold-light);
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(241, 196, 15, 0.3);
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+        .dialogue-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #f5f6fa;
+            min-height: 75px;
+            margin-bottom: 25px;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(241, 196, 15, 0.2);
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: #dcdde1;
+            text-align: left;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .option-btn:hover {
+            background: rgba(241, 196, 15, 0.1);
+            border-color: var(--gold-light);
+            color: #fff;
+            padding-left: 25px;
+        }
+
+        /* --- Screen 4: Summary / Epilogue --- */
+        #summary-screen h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .wisdom-card {
+            background: rgba(255,255,255,0.04);
+            border-left: 4px solid var(--gold-light);
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Audio Controls */
+        .audio-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(7, 30, 61, 0.6);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-light);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+        .audio-toggle:hover {
+            box-shadow: 0 0 10px var(--gold-glow);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="ambient-canvas"></canvas>
+
+    <button class="audio-toggle" id="audio-btn" title="Toggle Sound Elements">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07" class="speaker-wave"></path></svg>
+    </button>
+
+    <section id="menu-screen" class="screen active">
+        <svg class="peacock-feather-icon" viewBox="0 0 100 100">
+            <path d="M50,10 C25,40 35,70 50,90 C65,70 75,40 50,10 Z" fill="#009432"/>
+            <path d="M50,25 C35,45 42,68 50,82 C58,68 65,45 50,25 Z" fill="#0652dd"/>
+            <path d="M50,40 C43,53 47,68 50,75 C53,68 57,53 50,40 Z" fill="#f1c40f"/>
+            <circle cx="50" cy="58" r="8" fill="#8c7ae6"/>
+        </svg>
+        <h1 class="gold-text">KRISHNA SAKHA</h1>
+        <div class="subtitle">The Divine Companion</div>
+        <button class="btn-premium" onclick="navigateTo('selection-screen')">ENTER SANCTUM</button>
+    </section>
+
+    <section id="selection-screen" class="screen">
+        <div class="ornament-frame">
+            <h2 class="gold-text" style="font-size: 2rem; margin-bottom: 10px;">CHOOSE YOUR PATH</h2>
+            <p style="color: #a4b0be; margin-bottom: 20px;">Whose heart seeks guidance on this auspicious day?</p>
+            
+            <div class="selection-container">
+                <div class="card-profile" id="char-arjuna" onclick="selectCharacter('Arjuna')">
+                    <h3>ARJUNA</h3>
+                    <p style="margin-top: 8px;">The conflicted warrior standing on the precipice of duty and deep moral dilemma.</p>
+                </div>
+                <div class="card-profile" id="char-sudama" onclick="selectCharacter('Sudama')">
+                    <h3>SUDAMA</h3>
+                    <p style="margin-top: 8px;">The humble, devoted childhood companion carrying an unspoken weight of destitution.</p>
+                </div>
+            </div>
+
+            <button class="btn-premium" id="start-game-btn" style="margin-top: 35px; display: none;" onclick="startGame()">COMMENCE DIALOGUE</button>
+        </div>
+    </section>
+
+    <section id="game-screen" class="screen">
+        <div class="dialogue-box">
+            <div class="speaker-name" id="speaker-lbl">Krishna</div>
+            <div class="dialogue-text" id="dialogue-lbl">...</div>
+            <div class="options-container" id="options-box"></div>
+        </div>
+    </section>
+
+    <section id="summary-screen" class="screen">
+        <div class="ornament-frame" style="max-width: 650px;">
+            <h2 class="gold-text">DIVINE BLESSINGS</h2>
+            <div class="wisdom-card" id="wisdom-text"></div>
+            <p style="color: #a4b0be; font-size: 0.95rem; margin-bottom: 30px;">The words spoken linger as timeless truths within your consciousness.</p>
+            <button class="btn-premium" onclick="resetGame()">RETURN TO MENU</button>
+        </div>
+    </section>
+
+    <script>
+        /* --- Game Data & States --- */
+        let selectedCharacter = "";
+        let currentNode = "start";
+        let audioCtx = null;
+
+        const storyTree = {
+            Arjuna: {
+                start: {
+                    speaker: "Krishna",
+                    text: "The bows are strung, Arjuna, yet your hands tremble. Tell your Sakha, what dark shadow clouds your vision before this monumental duty?",
+                    options: [
+                        { text: "I see my kinsmen, teachers, and elders. How can victory born of their blood bring any joy?", next: "arjuna_grief" },
+                        { text: "My mind spins, Krishna. Duty demands action, but my conscience screams otherwise. I freeze.", next: "arjuna_surrender" }
+                    ]
+                },
+                arjuna_grief: {
+                    speaker: "Krishna",
+                    text: "You grieve for those who do not truly perish. The wise mourn neither the living nor the dead. The indestructible soul merely casts off worn-out garments for new ones. Stand up, O conqueror of sleep!",
+                    options: [
+                        { text: "Help me find balance. Teach me how to act without being bound to the tragic fallout.", next: "arjuna_karma" }
+                    ]
+                },
+                arjuna_surrender: {
+                    speaker: "Krishna",
+                    text: "Yield not to unmanliness, Arjuna. It ill becomes a majestic soul like yours. Shake off this trivial weakness of heart and arise to meet your destiny.",
+                    options: [
+                        { text: "Guide me unconditionally. I surrender my doubts and seek your ultimate wisdom.", next: "arjuna_karma" }
+                    ]
+                },
+                arjuna_karma: {
+                    speaker: "Krishna",
+                    text: "Your right is to the work alone, never to its fruits. Let not the rewards of action be your motive, nor let your attachment turn to passivity. Perform your cosmic duty anchored in Yoga.",
+                    options: [
+                        { text: "I see clearly now. My illusions are dispelled through your eternal light.", next: "end" }
+                    ]
+                }
+            },
+            Sudama: {
+                start: {
+                    speaker: "Krishna",
+                    text: "Sudama! My beloved friend. You have traveled far to Dwarka, yet your lips remain silent. What humble offering have you brought hidden beneath your shawl?",
+                    options: [
+                        { text: "It is only a handful of chipped rice, Krishna... too humble for the King of Dwarka.", next: "sudama_offering" },
+                        { text: "Just seeing you suffices, Sakha. My heart is full; nothing else matters.", next: "sudama_love" }
+                    ]
+                },
+                sudama_offering: {
+                    speaker: "Krishna",
+                    text: "When a pure heart offers Me even a leaf, a flower, a fruit, or water with love—I accept it with boundless joy. This beaten rice is sweeter than any royal feast!",
+                    options: [
+                        { text: "Your unconditional love fills my soul, erasing a lifetime of unseen sorrow.", next: "end" }
+                    ]
+                },
+                sudama_love: {
+                    speaker: "Krishna",
+                    text: "True friendship measures not wealth nor social stature. Wealth comes and goes, Sudama, but the spiritual bond built over shared childhood memories remains immortal.",
+                    options: [
+                        { text: "I am rich beyond measure simply being your Sakha.", next: "end" }
+                    ]
+                }
+            }
+        };
+
+        const epilogues = {
+            Arjuna: "“Whenever and wherever there is a decline in righteousness and a predominant rise of unrighteousness—at that time I manifest My presence to protect the good and transform the world.” — The essence of Bhagavad Gita remains with you.",
+            Sudama: "“True wealth is neither gold nor kingdom; it is the pure devotion of a selfless heart.” Your bond with the Divine has transformed scarcity into infinite inner abundance."
+        };
+
+        /* --- Audio Engine (Web Audio API Synthesizer) --- */
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playTone(freq, type, duration, volume) {
+            if (!audioCtx) return;
+            try {
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function playSelectSound() {
+            playTone(440, 'sine', 0.15, 0.1);
+            setTimeout(() => playTone(659, 'sine', 0.2, 0.08), 60);
+        }
+
+        function playTransitionSound() {
+            playTone(293, 'triangle', 0.4, 0.15);
+            setTimeout(() => playTone(349, 'triangle', 0.3, 0.12), 120);
+            setTimeout(() => playTone(523, 'sine', 0.5, 0.1), 240);
+        }
+
+        /* --- Ambient Animation Engine (Canvas) --- */
+        const canvas = document.getElementById('ambient-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height + canvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedY = -(Math.random() * 0.8 + 0.3);
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.alpha = Math.random() * 0.6 + 0.2;
+                this.hue = Math.random() > 0.4 ? 43 : 200; // Gold or Cosmic Blue
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -10) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${this.hue}, 90%, 60%, ${this.alpha})`;
+                ctx.shadowBlur = this.size * 4;
+                ctx.shadowColor = `hsla(${this.hue}, 90%, 60%, 0.6)`;
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset
+            }
+        }
+
+        for(let i=0; i<65; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Deep background gradient
+            let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#041329');
+            gradient.addColorStop(1, '#01070e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let p of particles) {
+                p.update();
+                p.draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        /* --- Screen Navigation Core --- */
+        function navigateTo(screenId) {
+            initAudio();
+            playTransitionSound();
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        /* --- Character Selection Flow --- */
+        function selectCharacter(charName) {
+            initAudio();
+            playSelectSound();
+            selectedCharacter = charName;
+            document.querySelectorAll('.card-profile').forEach(c => c.classList.remove('selected'));
+            document.getElementById(`char-${charName.toLowerCase()}`).classList.add('selected');
+            
+            const startBtn = document.getElementById('start-game-btn');
+            startBtn.style.display = "inline-block";
+            startBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        /* --- Interactive Dialogue Flow Engine --- */
+        function startGame() {
+            currentNode = "start";
+            navigateTo('game-screen');
+            renderNode();
+        }
+
+        function renderNode() {
+            const node = storyTree[selectedCharacter][currentNode];
+            document.getElementById('speaker-lbl').innerText = node.speaker;
+            
+            // Text presentation animation
+            const textLabel = document.getElementById('dialogue-lbl');
+            textLabel.style.opacity = 0;
+            textLabel.innerText = node.text;
+            setTimeout(() => { textLabel.style.transition = "opacity 0.5s"; textLabel.style.opacity = 1; }, 50);
+
+            const optionsBox = document.getElementById('options-box');
+            optionsBox.innerHTML = "";
+
+            node.options.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = "option-btn";
+                btn.innerText = opt.text;
+                btn.onclick = () => selectOption(opt.next);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        function selectOption(nextNode) {
+            playSelectSound();
+            if (nextNode === "end") {
+                finishGame();
+            } else {
+                currentNode = nextNode;
+                renderNode();
+            }
+        }
+
+        function finishGame() {
+            document.getElementById('wisdom-text').innerText = epilogues[selectedCharacter];
+            navigateTo('summary-screen');
+        }
+
+        function resetGame() {
+            selectedCharacter = "";
+            currentNode = "start";
+            document.querySelectorAll('.card-profile').forEach(c => c.classList.remove('selected'));
+            document.getElementById('start-game-btn').style.display = "none";
+            navigateTo('menu-screen');
+        }
+
+        // Toggle Audio Node State Explicitly
+        document.getElementById('audio-btn').addEventListener('click', () => {
+            initAudio();
+            playTone(587, 'sine', 0.2, 0.1);
+        });
+    </script>
+</body>
+</html>
