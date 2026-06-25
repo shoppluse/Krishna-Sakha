@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Vrindavan Exploration</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.5s;
+            --glass-bg: rgba(7, 30, 61, 0.7);
+            --glass-border: rgba(241, 196, 15, 0.3);
+            
+            /* Environmental Cycle Defaults */
+            --sky-gradient: linear-gradient(180deg, #ff9f43 0%, #feca57 50%, #dff9fb 100%);
+            --ground-color: #27ae60;
+            --ambient-overlay: rgba(255, 159, 67, 0.1);
+        }
+
+        /* --- Theme Multipliers --- */
+        .time-morning {
+            --sky-gradient: linear-gradient(180deg, #ff9f43 0%, #feca57 50%, #ffffea 100%);
+            --ambient-overlay: rgba(255, 159, 67, 0.12);
+        }
+        .time-afternoon {
+            --sky-gradient: linear-gradient(180deg, #45aaf2 0%, #4b7bec 60%, #a5d6a7 100%);
+            --ambient-overlay: rgba(255, 255, 255, 0);
+        }
+        .time-evening {
+            --sky-gradient: linear-gradient(180deg, #eb3b5a 0%, #fa8231 50%, #f7d794 100%);
+            --ambient-overlay: rgba(250, 130, 49, 0.2);
+        }
+        .time-night {
+            --sky-gradient: linear-gradient(180deg, #0f172a 0%, #1e1b4b 60%, #020617 100%);
+            --ambient-overlay: rgba(99, 102, 241, 0.15);
+        }
+
+        /* --- Reset & Immersive Foundation --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        /* --- Environmental Layout Elements --- */
+        #vrindavan-sky-matte {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--sky-gradient);
+            z-index: 1;
+            transition: background var(--transition-speed) ease;
+        }
+
+        #scenery-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ambient-lighting-filter {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+            background: var(--ambient-overlay);
+            transition: background var(--transition-speed) ease;
+        }
+
+        /* --- Master Container --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(241,196,15,0.1);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .nav-badge {
+            font-family: 'Cinzel', serif;
+            background: rgba(7, 30, 61, 0.6);
+            border: 1px solid var(--glass-border);
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* --- Open-world Interactive Landscape Stage --- */
+        .exploration-stage {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 15px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(2, 11, 20, 0.15);
+        }
+
+        /* Clickable World Node Elements Markers */
+        .world-destination-node {
+            position: absolute;
+            z-index: 20;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+
+        .world-destination-node:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .node-marker-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--glass-bg);
+            border: 1px solid var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .world-destination-node:hover .node-marker-icon {
+            background: var(--gold-primary);
+            color: #020b14;
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .node-marker-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.72rem;
+            color: #f5f6fa;
+            background: rgba(2, 11, 20, 0.8);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Vector Avatar Follower Base */
+        .avatar-follower-base {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            z-index: 30;
+            pointer-events: none;
+            transform: translate(-50%, -100%);
+            transform-origin: bottom center;
+            transition: top 3.5s cubic-bezier(0.25, 1, 0.5, 1), left 3.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .avatar-follower-base.walking {
+            animation: rhythmicWalk 0.6s infinite alternate ease-in-out;
+        }
+
+        @keyframes rhythmicWalk {
+            0% { transform: translate(-50%, -100%) translateY(0) rotate(-2deg); }
+            100% { transform: translate(-50%, -100%) translateY(-6px) rotate(2deg); }
+        }
+
+        /* --- Sidebar Analytics Dashboard --- */
+        .dashboard-overlay-panel {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            width: 240px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            padding: 12px;
+            z-index: 40;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-overlay-panel {
+                display: none; /* Hide panels on smaller viewport spaces for pure focus */
+            }
+        }
+
+        .dashboard-overlay-panel h4 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .dashboard-overlay-panel p {
+            font-size: 0.75rem;
+            color: #dcdde1;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- Global Bottom Navigation Row --- */
+        .bottom-nav {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 6px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #a4b0be;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 6px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            margin-bottom: 2px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-light);
+            background: rgba(255,255,255,0.04);
+        }
+
+        /* --- Photo Mode Elements --- */
+        .photo-mode-hide .top-nav,
+        .photo-mode-hide .bottom-nav,
+        .photo-mode-hide .dashboard-overlay-panel,
+        .photo-mode-hide .world-destination-node {
+            display: none !important;
+        }
+
+        .photo-frame-watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.4rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            display: none;
+            z-index: 100;
+        }
+
+        .photo-mode-hide .photo-frame-watermark {
+            display: block;
+        }
+    </style>
+</head>
+<body class="time-morning">
+
+    <div id="vrindavan-sky-matte"></div>
+    <canvas id="scenery-canvas"></canvas>
+    <div class="ambient-lighting-filter"></div>
+
+    <div class="app-container" id="master-app-wrapper">
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="location.href='index.html';">← EXIT</button>
+                <h1 class="page-title">VRINDAVAN EXPLORATION</h1>
+            </div>
+            <div class="nav-right">
+                <div class="nav-badge" id="env-time-node">Morning</div>
+                <div class="nav-badge" id="env-weather-node">✨ Peaceful Breeze</div>
+                <button class="btn-back" style="padding: 5px 12px; font-size: 0.8rem;" onclick="triggerScenerySnapshot()">📸 SNAPSHOT</button>
+            </div>
+        </header>
+
+        <main class="exploration-stage" id="main-exploration-arena">
+            
+            <div class="photo-frame-watermark">Krishna Sakha</div>
+
+            <div class="world-destination-node" style="top: 25%; left: 15%;" onclick="navigateToWorldDestination('nanda_bhavan', 15, 25)">
+                <div class="node-marker-icon">🏡</div>
+                <div class="node-marker-label">Nanda Bhavan</div>
+            </div>
+
+            <div class="world-destination-node" style="top: 70%; left: 30%;" onclick="navigateToWorldDestination('yamuna_river', 30, 70)">
+                <div class="node-marker-icon">🌊</div>
+                <div class="node-marker-label">Yamuna River</div>
+            </div>
+
+            <div class="world-destination-node" style="top: 40%; left: 50%;" onclick="navigateToWorldDestination('kadamba_tree', 50, 40)">
+                <div class="node-marker-icon">🌳</div>
+                <div class="node-marker-label">Kadamba Tree</div>
+            </div>
+
+            <div class="world-destination-node" style="top: 20%; left: 75%;" onclick="navigateToWorldDestination('flower_garden', 75, 20)">
+                <div class="node-marker-icon">🌸</div>
+                <div class="node-marker-label">Flower Garden</div>
+            </div>
+
+            <div class="world-destination-node" style="top: 75%; left: 70%;" onclick="navigateToWorldDestination('cow_pasture', 70, 75)">
+                <div class="node-marker-icon">🐄</div>
+                <div class="node-marker-label">Cow Pasture</div>
+            </div>
+
+            <div class="world-destination-node" style="top: 45%; left: 85%;" onclick="navigateToWorldDestination('govardhan_view', 85, 45)">
+                <div class="node-marker-icon">⛰️</div>
+                <div class="node-marker-label">Govardhan View</div>
+            </div>
+
+            <div class="avatar-follower-base" id="krishna-avatar-rig" style="left: 50%; top: 55%;">
+                <svg viewBox="0 0 100 150" style="width: 100%; height: 100%;">
+                    <circle cx="50" cy="45" r="16" fill="#2c3e50"/>
+                    <circle id="rig-complexion" cx="50" cy="48" r="13" fill="#74b9ff"/>
+                    <path d="M36 36 L50 12 L64 36 Z" fill="#f1c40f"/>
+                    <path d="M50 12 Q60 -5 55 -12 Q45 -5 50 12" fill="#009432"/>
+                    <path d="M49 38 L51 38 L50 44 Z" fill="#fff"/>
+                    <path id="eye-l" d="M43 47 Q45 45 47 47" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                    <path id="eye-r" d="M53 47 Q55 45 57 47" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                    <path id="krishna-smile" d="M46 54 Q50 57 54 54" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+                    <path d="M38 62 Q50 78 62 62" fill="none" stroke="#ff7675" stroke-width="3" stroke-dasharray="4 2"/>
+                    <path d="M36 62 L64 62 L68 98 L32 98 Z" fill="#f1c40f"/>
+                    <path d="M43 62 Q50 85 57 62" fill="none" stroke="#e67e22" stroke-width="1"/>
+                </svg>
+            </div>
+
+            <section class="dashboard-overlay-panel">
+                <h4>SANCTUM PROGRESS</h4>
+                <p><span>📍 Location:</span> <span id="dash-location-lbl">Vrindavan Fields</span></p>
+                <p><span>🌸 Memories:</span> <span id="dash-discoveries-lbl">0 Unlocked</span></p>
+                <p><span>🚶 Walk Steps:</span> <span id="dash-distance-lbl">0 m</span></p>
+                <p><span>⏱️ Time Spent:</span> <span id="dash-time-lbl">0s</span></p>
+            </section>
+        </main>
+
+        <footer class="bottom-nav">
+            <a class="nav-item" onclick="location.href='index.html';"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+            <a class="nav-item" onclick="location.href='play.html';"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>Play</a>
+            <a class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/></svg>Vrindavan</a>
+            <a class="nav-item" onclick="location.href='bhoga.html';"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Bhoga</a>
+            <a class="nav-item" onclick="location.href='arati.html';"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H7"/></svg>Arati</a>
+            <a class="nav-item" onclick="location.href='stories.html';"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Stories</a>
+            <a class="nav-item" onclick="location.href='profile.html';"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>Profile</a>
+        </footer>
+    </div>
+
+    <script>
+        /* --- Living AI States and Environments Definitions --- */
+        const ATMOSPHERES = ["Morning", "Afternoon", "Evening", "Night"];
+        const DESTINATION_META = {
+            nanda_bhavan: { title: "Nanda Bhavan", action: "smile", msg: "Entering the loving home courtyard of Mother Yasoda." },
+            yamuna_river: { title: "Yamuna River Banks", action: "playFlute", msg: "Sitting by the calm crystalline blue sacred waves." },
+            kadamba_tree: { title: "Ancient Kadamba", action: "smile", msg: "Resting safely beneath the holy sweet shade." },
+            flower_garden: { title: "Malati Garden", action: "dance", msg: "Butterflies gather around as flowers drop gently." },
+            cow_pasture: { title: "Surabhi Pasture", action: "smile", msg: "Petting the soft ears of the grazing calves." },
+            govardhan_view: { title: "Govardhan Vista", action: "smile", msg: "Gazing out into the infinite blue spiritual horizon." }
+        };
+
+        let currentAtmosphereIdx = 0;
+        let activeDestinationKey = "";
+        let movementInProgress = false;
+        
+        /* --- Local Analytics Metric Tracking Slots --- */
+        let stepCountAccumulated = parseInt(localStorage.getItem("vrindavan_steps") || "0");
+        let sessionTimeTracked = 0;
+        let discoveredLocationsList = JSON.parse(localStorage.getItem("vrindavan_discovered") || "[]");
+
+        /* --- Scenery Graphics Vector Processing Engine Canvas --- */
+        const canvas = document.getElementById('scenery-canvas');
+        const ctx = canvas.getContext('2d');
+        let environmentalParticlesList = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class NatureParticle {
+            constructor(type) {
+                this.type = type; // 'petal', 'butterfly', 'sparkle'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1.5;
+                this.speedY = this.type === 'petal' ? (Math.random() * 0.5 + 0.3) : (Math.random() * 0.4 - 0.2);
+                this.speedX = Math.random() * 0.6 - 0.3;
+                this.alpha = Math.random() * 0.6 + 0.2;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30 || this.y > canvas.height + 30 || this.x < -30 || this.x > canvas.width + 30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                if(this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#ff7675";
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size*1.3, 0, 0, Math.PI*2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = "rgba(241, 196, 15, 0.7)";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size*0.5, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Populates Base Environment Matrices Pools
+        for(let i=0; i<15; i++) environmentalParticlesList.push(new NatureParticle('petal'));
+        for(let i=15; i<35; i++) environmentalParticlesList.push(new NatureParticle('sparkle'));
+
+        function runSceneryGraphicsEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Render smooth vector ground layer blocks smoothly via raw canvas drawing
+            ctx.fillStyle = "rgba(39, 174, 96, 0.12)";
+            ctx.beginPath();
+            ctx.ellipse(canvas.width*0.3, canvas.height, canvas.width*0.5, 120, 0, 0, Math.PI*2);
+            ctx.ellipse(canvas.width*0.8, canvas.height, canvas.width*0.4, 100, 0, 0, Math.PI*2);
+            ctx.fill();
+
+            for(let p of environmentalParticlesList) {
+                p.update();
+                p.draw();
+            }
+            requestAnimationFrame(runSceneryGraphicsEngine);
+        }
+        runSceneryGraphicsEngine();
+
+        /* --- Life-cycle Initializations and Controls loops --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            syncStatisticsViewPanels();
+            executeAutonomousBehaviorCycle();
+            
+            // Periodic system increments tracker
+            setInterval(() => {
+                sessionTimeTracked += 1;
+                document.getElementById("dash-time-lbl").innerText = `${sessionTimeTracked}s`;
+            }, 1000);
+
+            // Periodically cycle weather patterns variations
+            setInterval(() => {
+                const weatherStates = ["✨ Peaceful Breeze", "🌸 Falling Petals Bloom", "🎵 Distant Flute Echoes", "🌈 Soft Golden Rainbow"];
+                document.getElementById("env-weather-node").innerText = weatherStates[Math.floor(Math.random() * weatherStates.length)];
+            }, 12000);
+        });
+
+        function syncStatisticsViewPanels() {
+            document.getElementById("dash-discoveries-lbl").innerText = `${discoveredLocationsList.length} Unlocked`;
+            document.getElementById("dash-distance-lbl").innerText = `${stepCountAccumulated} m`;
+        }
+
+        /* --- Interactive Exploration Logic Navigation Engines --- */
+        function navigateToWorldDestination(destinationId, pctX, pctY) {
+            if (movementInProgress) return;
+            movementInProgress = true;
+            activeDestinationKey = destinationId;
+
+            const rig = document.getElementById("krishna-avatar-rig");
+            rig.classList.add("walking");
+
+            // Update destination target offsets positions smoothly
+            rig.style.left = `${pctX}%`;
+            rig.style.top = `${pctY}%`;
+
+            // Calculate mock linear step increments distances metrics safely
+            stepCountAccumulated += Math.floor(Math.random() * 30) + 20;
+            localStorage.setItem("vrindavan_steps", stepCountAccumulated.toString());
+            syncStatisticsViewPanels();
+
+            // Intercept translation sequence completions
+            setTimeout(() => {
+                rig.classList.remove("walking");
+                movementInProgress = false;
+                executeContextualArrivalSequence();
+            }, 3500);
+        }
+
+        function executeContextualArrivalSequence() {
+            const meta = DESTINATION_META[activeDestinationKey];
+            if (!meta) return;
+
+            document.getElementById("dash-location-lbl").innerText = meta.title;
+            
+            // Log target node discovery tracking flags safely
+            if (!discoveredLocationsList.includes(activeDestinationKey)) {
+                discoveredLocationsList.push(activeDestinationKey);
+                localStorage.setItem("vrindavan_discovered", JSON.stringify(discoveredLocationsList));
+                syncStatisticsViewPanels();
+            }
+
+            applyRigVisualStance(meta.action);
+
+            // Visual flash burst drops effects patterns injection
+            for (let i = 0; i < 15; i++) {
+                environmentalParticlesList.push(new NatureParticle('petal'));
+            }
+        }
+
+        /* --- Autonomous Character Behavioral Loops --- */
+        const behaviorStancesPool = ['smile', 'blink', 'playFlute', 'dance'];
+        let lastPlayedStance = "";
+
+        function executeAutonomousBehaviorCycle() {
+            if (movementInProgress) {
+                setTimeout(executeAutonomousBehaviorCycle, 4000);
+                return;
+            }
+
+            let nextPool = behaviorStancesPool.filter(s => s !== lastPlayedStance);
+            let chosen = nextPool[Math.floor(Math.random() * nextPool.length)];
+            lastPlayedStance = chosen;
+
+            applyRigVisualStance(chosen);
+            setTimeout(executeAutonomousBehaviorCycle, Math.random() * 5000 + 6000);
+        }
+
+        function applyRigVisualStance(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            const base = document.getElementById("krishna-avatar-rig");
+
+            elL.setAttribute("d", "M43 47 Q45 45 47 47");
+            elR.setAttribute("d", "M53 47 Q55 45 57 47");
+            smile.setAttribute("d", "M46 54 Q50 57 54 54");
+            base.style.transform = "translate(-50%, -100%) scale(1)";
+
+            switch(state) {
+                case 'blink':
+                    elL.setAttribute("d", "M43 47 L47 47");
+                    elR.setAttribute("d", "M53 47 L57 47");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M44 52 Q50 61 56 52");
+                    break;
+                case 'dance':
+                    base.style.transform = "translate(-50%, -100%) scale(1.04) translateY(-8px) rotate(4deg)";
+                    smile.setAttribute("d", "M43 51 Q50 62 57 51");
+                    break;
+            }
+        }
+
+        /* --- Snapshot / Photo Frame Mode Execution Panels --- */
+        function triggerScenerySnapshot() {
+            const wrapper = document.getElementById("master-app-wrapper");
+            wrapper.classList.add("photo-mode-hide");
+
+            setTimeout(() => {
+                alert("✨ Vrindavan Snapshot captured beautifully! In full platform execution, this exports the active scenery framework composition coordinates seamlessly.");
+                wrapper.classList.remove("photo-mode-hide");
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
