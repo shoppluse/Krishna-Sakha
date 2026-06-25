@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Dress Devotion</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+            --glass-bg: rgba(7, 30, 61, 0.75);
+            --glass-border: rgba(241, 196, 15, 0.3);
+        }
+
+        /* --- Reset & Immersive Foundation --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        /* --- Environmental Ambience Rendering --- */
+        #dressing-room-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .sunlight-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(255, 234, 167, 0.15) 0%, rgba(2, 11, 20, 0) 70%);
+        }
+
+        /* --- Layout Container --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            transition: opacity var(--transition-speed);
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(241, 196, 15, 0.1);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .outfit-badge {
+            font-family: 'Cinzel', serif;
+            background: rgba(243, 156, 18, 0.15);
+            border: 1px solid var(--gold-primary);
+            padding: 5px 14px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        /* --- Main Workstation Split View --- */
+        .workspace-grid {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        @media (max-width: 950px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+        }
+
+        /* --- Left Pillar: Altar View Room --- */
+        .darshan-altar {
+            background: rgba(4, 19, 41, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        /* Decorative Background Aura Frame */
+        .divine-aura-back {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(241, 196, 15, 0.2) 0%, rgba(0,0,0,0) 70%);
+            z-index: 1;
+            pointer-events: none;
+            animation: auraPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes auraPulse {
+            0% { transform: scale(0.9); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Dynamic Vector Avatar Assembly Rig */
+        .character-container {
+            height: 340px;
+            width: 240px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 3;
+            transform-origin: bottom center;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .krishna-svg-rig {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Utility Flash Glow Trigger Class */
+        .sparkle-active {
+            animation: assetSparkle 0.6s ease-out;
+        }
+
+        @keyframes assetSparkle {
+            0% { filter: brightness(1) drop-shadow(0 0 0 rgba(241,196,15,0)); }
+            50% { filter: brightness(1.6) drop-shadow(0 0 20px var(--gold-primary)); }
+            100% { filter: brightness(1) drop-shadow(0 0 0 rgba(241,196,15,0)); }
+        }
+
+        /* --- Right Pillar: Wardrobe Ward Compartments --- */
+        .wardrobe-sanctuary {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 0;
+        }
+
+        /* Quick Utility Actions Row */
+        .utility-presets-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .btn-utility {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-light);
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-utility:hover {
+            border-color: var(--gold-light);
+            background: rgba(10, 61, 98, 0.6);
+            box-shadow: 0 0 8px rgba(241,196,15,0.2);
+        }
+
+        /* Festival Presets Deck Panel */
+        .festival-deck {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .festival-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(241,196,15,0.2);
+            color: var(--gold-light);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .festival-chip:hover, .festival-chip.active-preset {
+            background: var(--gold-primary);
+            color: #020b14;
+            border-color: var(--gold-light);
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* Wardrobe Category / Selector Panes Grid */
+        .wardrobe-workspace-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-height: 0;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .category-tab-scroll {
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+            background: rgba(2, 11, 20, 0.4);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab-node {
+            padding: 10px 16px;
+            color: #a4b0be;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-node:hover, .tab-node.active-tab {
+            color: var(--gold-light);
+            border-bottom-color: var(--gold-light);
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Items Display Area Panel */
+        .items-display-deck {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .item-card-asset {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-card-asset:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 12px rgba(241,196,15,0.25);
+            transform: translateY(-2px);
+            background: rgba(10, 61, 98, 0.4);
+        }
+
+        .item-card-asset.equipped {
+            border-color: var(--gold-primary);
+            background: rgba(243, 156, 18, 0.15);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .item-card-asset svg {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 6px;
+        }
+
+        .item-card-asset span {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-light);
+            line-height: 1.2;
+        }
+
+        /* --- Bottom Global Navigation Framework Deck --- */
+        .bottom-nav {
+            width: 100%;
+            max-width: 800px;
+            margin: 15px auto 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            padding: 6px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #a4b0be;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            margin-bottom: 3px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-light);
+            background: rgba(255,255,255,0.04);
+        }
+
+        /* --- Photo Mode / Immersive Darshan Frame Mode Overlays --- */
+        .photo-mode-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #020b14;
+            z-index: 500;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .snapshot-boundary {
+            border: 12px double var(--gold-primary);
+            padding: 40px;
+            background: linear-gradient(180deg, #041426 0%, #010812 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .snapshot-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.8rem;
+            margin-top: 25px;
+            text-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        .snapshot-subtitle {
+            font-family: 'Cinzel', serif;
+            color: #a4b0be;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+
+        .photo-controls-row {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sunlight-overlay"></div>
+    <canvas id="dressing-room-canvas"></canvas>
+
+    <div class="app-container" id="main-interface-wrapper">
+        
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="window.history.back();">← LEAVE</button>
+                <h1 class="page-title">DRESS KRISHNA</h1>
+            </div>
+            <div class="nav-right">
+                <div class="outfit-badge" id="active-outfit-lbl">Default Shringar</div>
+                <button class="btn-utility" style="padding: 6px 12px;" onclick="triggerDarshanPhotoMode()">📸 DARSHAN</button>
+            </div>
+        </header>
+
+        <main class="workspace-grid">
+            
+            <div class="darshan-altar" id="altar-display-frame">
+                <div class="divine-aura-back" id="aura-node"></div>
+
+                <div class="character-container" id="avatar-container-node">
+                    <svg class="krishna-svg-rig" id="krishna-master-vector" viewBox="0 0 100 150">
+                        <circle cx="50" cy="46" r="19" fill="#1e272e"/>
+                        <circle cx="36" cy="48" r="6" fill="#1e272e"/>
+                        <circle cx="64" cy="48" r="6" fill="#1e272e"/>
+                        
+                        <circle id="base-skin-face" cx="50" cy="48" r="14" fill="#54a0ff"/>
+                        <path id="base-skin-body" d="M36 64 L64 64 L60 105 L40 105 Z" fill="#54a0ff"/>
+                        <circle cx="36" cy="66" r="4.5" fill="#54a0ff"/>
+                        <circle cx="64" cy="66" r="4.5" fill="#54a0ff"/>
+                        <rect x="38" y="102" width="7" height="32" rx="3.5" fill="#54a0ff"/>
+                        <rect x="55" y="102" width="7" height="32" rx="3.5" fill="#54a0ff"/>
+
+                        <path d="M48.5 37 L51.5 37 L50 44 Z" fill="#fff"/>
+                        <circle cx="50" cy="41" r="1" fill="#e74c3c"/>
+                        <path id="eye-l" d="M42 46 Q45 44 47 46" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/>
+                        <path id="eye-r" d="M53 46 Q55 44 58 46" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/>
+                        <path id="krishna-smile" d="M46 54 Q50 57 54 54" fill="none" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/>
+
+                        <g id="slot-bgdecor"></g>
+                        <g id="slot-dhoti">
+                            <path d="M34 95 L66 95 L70 125 L30 125 Z" fill="#f1c40f"/>
+                        </g>
+                        <g id="slot-uppercloth"></g>
+                        <g id="slot-waistbelt"></g>
+                        <g id="slot-necklaces"></g>
+                        <g id="slot-garlands"></g>
+                        <g id="slot-bracelets"></g>
+                        <g id="slot-anklets"></g>
+                        <g id="slot-crowns">
+                            <path d="M36 36 L50 14 L64 36 Z" fill="#f1c40f" stroke="#f39c12" stroke-width="1"/>
+                        </g>
+                        <g id="slot-feathers">
+                            <path d="M50 14 Q60 0 54 -10 Q44 0 50 14" fill="#009432"/>
+                        </g>
+                        <g id="slot-flute">
+                            <rect x="26" y="52" width="48" height="3.5" rx="1.5" fill="#d35400" transform="rotate(-8 50 54)"/>
+                        </g>
+                        <g id="slot-flowers"></g>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="wardrobe-sanctuary">
+                
+                <div class="utility-presets-bar">
+                    <button class="btn-utility" onclick="commitOutfitToFavorites()">💾 SAVE OUTFIT</button>
+                    <button class="btn-utility" onclick="loadOutfitFromFavorites()">📂 LOAD FAVORITE</button>
+                    <button class="btn-utility" onclick="triggerSurpriseShringar()">✨ SURPRISE ME</button>
+                </div>
+
+                <div class="festival-deck" id="festival-presets-scroller">
+                    <div class="festival-chip" onclick="applyFestivalPreset('janmashtami')">Janmashtami</div>
+                    <div class="festival-chip" onclick="applyFestivalPreset('radhashtami')">Radhashtami</div>
+                    <div class="festival-chip" onclick="applyFestivalPreset('govardhan')">Govardhan Puja</div>
+                    <div class="festival-chip" onclick="applyFestivalPreset('kartik')">Kartik Maas</div>
+                    <div class="festival-chip" onclick="applyFestivalPreset('holi')">Holi Utsav</div>
+                </div>
+
+                <div class="wardrobe-workspace-box">
+                    <div class="category-tab-scroll" id="tabs-scroller-node">
+                        </div>
+                    <div class="items-display-deck" id="items-grid-arena">
+                        </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bottom-nav">
+            <a class="nav-item" onclick="window.history.back();"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+            <a class="nav-item" onclick="location.href='play.html';"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>Play</a>
+            <a class="nav-item" onclick="location.href='bhoga.html';"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Bhoga</a>
+            <a class="nav-item" onclick="location.href='arati.html';"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H7"/></svg>Arati</a>
+            <a class="nav-item active"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Dress</a>
+            <a class="nav-item" onclick="location.href='stories.html';"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Stories</a>
+        </footer>
+    </div>
+
+    <div class="photo-mode-frame" id="darshan-snapshot-overlay">
+        <div class="snapshot-boundary" id="snapshot-capture-frame">
+            <div id="snapshot-avatar-placement-dome" style="height: 300px; display: flex; align-items: flex-end; justify-content: center;"></div>
+            <h2 class="snapshot-title">Krishna Sakha</h2>
+            <p class="snapshot-subtitle">🌸 Divine Darshan Bliss 🌸</p>
+        </div>
+        <div class="photo-controls-row">
+            <button class="btn-premium" style="padding: 12px 30px;" onclick="executeDownloadDarshanImage()">💾 DOWNLOAD</button>
+            <button class="btn-back" style="padding: 12px 30px;" onclick="closeDarshanPhotoMode()">CLOSE</button>
+        </div>
+    </div>
+
+    <script>
+        /* ================= WARDROBE DATA ARCHITECTURE MATRIX REPOSITORY ================= */
+        const WARDROBE_SCHEMA = {
+            dhoti: [
+                { id: "yellow_silk", name: "Yellow Silk Dhoti", markup: `<path d="M34 95 L66 95 L72 128 L28 128 Z" fill="#f1c40f"/><path d="M44 95 Q50 115 56 95" fill="none" stroke="#e67e22" stroke-width="1.5"/>` },
+                { id: "pure_white", name: "White Cotton Dhoti", markup: `<path d="M34 95 L66 95 L72 128 L28 128 Z" fill="#f5f6fa"/><path d="M44 95 Q50 115 56 95" fill="none" stroke="#b2bec3" stroke-width="1.5"/>` },
+                { id: "royal_gold", name: "Golden Zari Dhoti", markup: `<path d="M34 95 L66 95 L72 128 L28 128 Z" fill="#e58e26"/><path d="M34 95 L66 95" stroke="#f1c40f" stroke-width="3"/>` },
+                { id: "blue_silk", name: "Peacock Blue Dhoti", markup: `<path d="M34 95 L66 95 L72 128 L28 128 Z" fill="#0a3d62"/><path d="M44 95 Q50 115 56 95" fill="none" stroke="#3498db" stroke-width="1.5"/>` }
+            ],
+            crowns: [
+                { id: "simple_crown", name: "Mayur Crown", markup: `<path d="M34 36 L50 12 L66 36 Z" fill="#f1c40f" stroke="#e67e22" stroke-width="1.5"/><circle cx="50" cy="24" r="2.5" fill="#e74c3c"/>` },
+                { id: "royal_gold", name: "Swarna Mukut", markup: `<path d="M32 36 L40 16 L50 8 L60 16 L68 36 Z" fill="#f1c40f"/><path d="M32 36 Q50 24 68 36" fill="none" stroke="#d35400" stroke-width="2"/>` },
+                { id: "flower_crown", name: "Malati Flower Crown", markup: `<circle cx="36" cy="32" r="3" fill="#fff"/><circle cx="43" cy="28" r="3" fill="#ff7675"/><circle cx="50" cy="26" r="3" fill="#fff"/><circle cx="57" cy="28" r="3" fill="#ff7675"/><circle cx="64" cy="32" r="3" fill="#fff"/>` }
+            ],
+            feathers: [
+                { id: "classic_feather", name: "Classic Chandrika", markup: `<path d="M50 12 Q64 -8 56 -22 Q42 -8 50 12" fill="#009432"/><circle cx="52" cy="-7" r="3.5" fill="#0652dd"/>` },
+                { id: "triple_feather", name: "Triple Sacred Feather", markup: `<path d="M50 12 Q64 -8 56 -22 Q42 -8 50 12" fill="#009432"/><path d="M48 12 Q36 -4 44 -16 Q52 -4 48 12" fill="#27ae60"/>` }
+            ],
+            garlands: [
+                { id: "vaijayanti", name: "Vaijayanti Mala", markup: `<path d="M34 66 Q50 96 66 66" fill="none" stroke="#fff" stroke-width="4" stroke-dasharray="6 4"/><path d="M34 66 Q50 96 66 66" fill="none" stroke="#f1c40f" stroke-width="2" stroke-dasharray="2 4"/>` },
+                { id: "tulasi", name: "Sacred Tulasi Mala", markup: `<path d="M36 66 Q50 88 64 66" fill="none" stroke="#27ae60" stroke-width="3" stroke-dasharray="4 2"/>` },
+                { id: "rose_garland", name: "Fresh Rose Garland", markup: `<path d="M34 66 Q50 102 66 66" fill="none" stroke="#ff7675" stroke-width="5" stroke-dasharray="5 3"/>` }
+            ],
+            flute: [
+                { id: "golden_flute", name: "Venu Golden Flute", markup: `<rect x="26" y="52" width="50" height="4" rx="2" fill="#f1c40f" transform="rotate(-8 50 54)"/><circle cx="72" cy="47" r="1.5" fill="#e74c3c"/>` },
+                { id: "wooden_flute", name: "Bansuri Bamboo Flute", markup: `<rect x="26" y="52" width="48" height="3.5" rx="1.5" fill="#d35400" transform="rotate(-8 50 54)"/>` }
+            ],
+            bgdecor: [
+                { id: "none", name: "Temple Interior", markup: `` },
+                { id: "cows", name: "Surabhi Cows Aura", markup: `<path d="M10 140 Q25 110 40 140" stroke="#fff" stroke-width="2" fill="none" opacity="0.4"/>` }
+            ]
+        };
+
+        const FESTIVAL_PRESETS = {
+            janmashtami: { title: "Janmashtami Grandeur", dhoti: "royal_gold", crowns: "royal_gold", feathers: "triple_feather", garlands: "vaijayanti", flute: "golden_flute", bgdecor: "none" },
+            radhashtami: { title: "Radhashtami Prema", dhoti: "blue_silk", crowns: "flower_crown", feathers: "classic_feather", garlands: "rose_garland", flute: "golden_flute", bgdecor: "none" },
+            govardhan: { title: "Govardhan Shringar", dhoti: "yellow_silk", crowns: "simple_crown", feathers: "classic_feather", garlands: "tulasi", flute: "wooden_flute", bgdecor: "cows" },
+            kartik: { title: "Kartik Damodar Light", dhoti: "pure_white", crowns: "simple_crown", feathers: "classic_feather", garlands: "tulasi", flute: "wooden_flute", bgdecor: "none" },
+            holi: { title: "Holi Phagotsav", dhoti: "pure_white", crowns: "flower_crown", feathers: "classic_feather", garlands: "rose_garland", flute: "golden_flute", bgdecor: "none" }
+        };
+
+        /* --- Local State Vectors Operational Trackers --- */
+        let activeTabCategory = "dhoti";
+        let equippedState = { dhoti: "yellow_silk", crowns: "simple_crown", feathers: "classic_feather", garlands: "vaijayanti", flute: "wooden_flute", bgdecor: "none" };
+
+        /* --- Ambient Scenery Dynamics Canvas Render Processing Engine --- */
+        const canvas = document.getElementById('dressing-room-canvas');
+        const ctx = canvas.getContext('2d');
+        let backgroundScenicParticles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class FlowingParticle {
+            constructor(type) {
+                this.type = type; // 'petal', 'sparkle'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1.5;
+                this.speedY = this.type === 'petal' ? (Math.random() * 0.6 + 0.3) : -(Math.random() * 0.4 + 0.1);
+                this.speedX = Math.random() * 0.6 - 0.3;
+                this.alpha = Math.random() * 0.5 + 0.2;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30 || this.y > canvas.height + 30 || this.x < -30 || this.x > canvas.width + 30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                if(this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#ff7675";
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size*1.4, 0, 0, Math.PI*2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = "#f1c40f";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size*0.5, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Initialize Background Particle Stack Arrays Frame
+        for(let i=0; i<15; i++) backgroundScenicParticles.push(new FlowingParticle('petal'));
+        for(let i=0; i<20; i++) backgroundScenicParticles.push(new FlowingParticle('sparkle'));
+
+        function runBackgroundGraphicsEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let roomGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            roomGrad.addColorStop(0, '#031424');
+            roomGrad.addColorStop(1, '#01070f');
+            ctx.fillStyle = roomGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let node of backgroundScenicParticles) {
+                node.update();
+                node.draw();
+            }
+            requestAnimationFrame(runBackgroundGraphicsEngine);
+        }
+        runBackgroundGraphicsEngine();
+
+        /* --- Engine Initializations & Synchronization Handlers --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            loadEquippedStateFromStorage();
+            buildCategoryTabsNavigation();
+            renderCategoryItemsDeck();
+            synchronizeActiveRigLayerViews();
+            initializeCharacterBehaviorEngine();
+        });
+
+        function buildCategoryTabsNavigation() {
+            const scroller = document.getElementById("tabs-scroller-node");
+            scroller.innerHTML = "";
+            Object.keys(WARDROBE_SCHEMA).forEach(catKey => {
+                let node = document.createElement("div");
+                node.className = `tab-node ${catKey === activeTabCategory ? 'active-tab' : ''}`;
+                node.innerText = catKey.toUpperCase();
+                node.onclick = () => {
+                    activeTabCategory = catKey;
+                    document.querySelectorAll('.tab-node').forEach(el => el.classList.remove('active-tab'));
+                    node.classList.add('active-tab');
+                    renderCategoryItemsDeck();
+                };
+                scroller.appendChild(node);
+            });
+        }
+
+        function renderCategoryItemsDeck() {
+            const arena = document.getElementById("items-grid-arena");
+            arena.innerHTML = "";
+            const itemsList = WARDROBE_SCHEMA[activeTabCategory];
+
+            itemsList.forEach(item => {
+                let card = document.createElement("div");
+                card.className = `item-card-asset ${equippedState[activeTabCategory] === item.id ? 'equipped' : ''}`;
+                card.onclick = () => equipAssetItem(activeTabCategory, item.id);
+                card.innerHTML = `
+                    <svg viewBox="0 0 100 100"><g transform="scale(0.8) translate(10,10)">${item.markup}</g></svg>
+                    <span>${item.name}</span>
+                `;
+                arena.appendChild(card);
+            });
+        }
+
+        /* --- Customization Application Logic Engines --- */
+        function equipAssetItem(categoryKey, itemId, suppressSparkle = false) {
+            equippedState[categoryKey] = itemId;
+            
+            // Re-render asset layout matrices selectors
+            if (categoryKey === activeTabCategory) {
+                document.querySelectorAll('.item-card-asset').forEach(el => el.classList.remove('equipped'));
+                renderCategoryItemsDeck(); 
+            }
+
+            synchronizeActiveRigLayerViews();
+            saveEquippedStateToStorage();
+
+            if (!suppressSparkle) {
+                const targetSlot = document.getElementById(`slot-${categoryKey}`);
+                if (targetSlot) {
+                    targetSlot.classList.remove("sparkle-active");
+                    void targetSlot.offsetWidth; // Trigger DOM reflow sequence manually
+                    targetSlot.classList.add("sparkle-active");
+                }
+            }
+        }
+
+        function synchronizeActiveRigLayerViews() {
+            Object.keys(equippedState).forEach(catKey => {
+                const activeId = equippedState[catKey];
+                const itemData = WARDROBE_SCHEMA[catKey].find(i => i.id === activeId);
+                const slotNode = document.getElementById(`slot-${catKey}`);
+                if (slotNode && itemData) {
+                    slotNode.innerHTML = itemData.markup;
+                }
+            });
+        }
+
+        /* --- Preset Combinations & Random Combinations Processing Engines --- */
+        function applyFestivalPreset(presetKey) {
+            const config = FESTIVAL_PRESETS[presetKey];
+            if (!config) return;
+
+            document.querySelectorAll('.festival-chip').forEach(el => el.classList.remove('active-preset'));
+            event.target.classList.add('active-preset');
+
+            Object.keys(equippedState).forEach(catKey => {
+                if (config[catKey]) {
+                    equipAssetItem(catKey, config[catKey], true);
+                }
+            });
+
+            document.getElementById("active-outfit-lbl").innerText = config.title;
+        }
+
+        function triggerSurpriseShringar() {
+            Object.keys(WARDROBE_SCHEMA).forEach(catKey => {
+                const pool = WARDROBE_SCHEMA[catKey];
+                const randomChoice = pool[Math.floor(Math.random() * pool.length)];
+                equipAssetItem(catKey, randomChoice.id, true);
+            });
+
+            document.getElementById("active-outfit-lbl").innerText = "Surprise Shringar ✨";
+            
+            // Apply full body burst flash feedback loop sequence
+            const rig = document.getElementById("avatar-container-node");
+            rig.style.transform = "scale(1.05)";
+            setTimeout(() => rig.style.transform = "scale(1)", 300);
+        }
+
+        /* --- Local Storage State Synchronization Interfaces --- */
+        function saveEquippedStateToStorage() {
+            localStorage.setItem("equipped_shringar_state", JSON.stringify(equippedState));
+            localStorage.setItem("equipped_shringar_last_date", new Date().toDateString());
+        }
+
+        function loadEquippedStateFromStorage() {
+            const stored = localStorage.getItem("equipped_shringar_state");
+            if (stored) {
+                try { equippedState = JSON.parse(stored); } catch(e){}
+            }
+        }
+
+        function commitOutfitToFavorites() {
+            localStorage.setItem("favorite_shringar_state", JSON.stringify(equippedState));
+            document.getElementById("active-outfit-lbl").innerText = "Favorite Saved ❤️";
+        }
+
+        function loadOutfitFromFavorites() {
+            const stored = localStorage.getItem("favorite_shringar_state");
+            if (stored) {
+                try {
+                    equippedState = JSON.parse(stored);
+                    synchronizeActiveRigLayerViews();
+                    renderCategoryItemsDeck();
+                    document.getElementById("active-outfit-lbl").innerText = "Favorite Loaded 📂";
+                } catch(e){}
+            }
+        }
+
+        /* --- Living Character Postures / Expressions Cycles Loop Engine --- */
+        const dynamicBehaviorsList = ['smile', 'blink', 'lookLeft', 'meditate'];
+        let lastPlayedBehavior = "";
+
+        function initializeCharacterBehaviorEngine() {
+            let nextPool = dynamicBehaviorsList.filter(b => b !== lastPlayedBehavior);
+            let chosen = nextPool[Math.floor(Math.random() * nextPool.length)];
+            lastPlayedBehavior = chosen;
+
+            applyRigBehaviorState(chosen);
+            setTimeout(initializeCharacterBehaviorEngine, Math.random() * 4000 + 5000);
+        }
+
+        function applyRigBehaviorState(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+
+            elL.setAttribute("d", "M42 46 Q45 44 47 46");
+            elR.setAttribute("d", "M53 46 Q55 44 58 46");
+            smile.setAttribute("d", "M46 54 Q50 57 54 54");
+
+            switch(state) {
+                case 'blink':
+                    elL.setAttribute("d", "M42 46 L47 46");
+                    elR.setAttribute("d", "M53 46 L58 46");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M44 52 Q50 60 56 52");
+                    break;
+                case 'lookLeft':
+                    elL.setAttribute("d", "M40 46 Q43 44 45 46");
+                    elR.setAttribute("d", "M51 46 Q54 44 56 46");
+                    break;
+            }
+        }
+
+        /* --- Photo Mode / Immersive Presentation Screen Layer Scripts --- */
+        function triggerDarshanPhotoMode() {
+            const overlay = document.getElementById("darshan-snapshot-overlay");
+            const dome = document.getElementById("snapshot-avatar-placement-dome");
+            const masterRig = document.getElementById("krishna-master-vector");
+
+            // Clone Master Active Vector Node explicitly inside placement frame site
+            dome.innerHTML = "";
+            let clonedVector = masterRig.cloneNode(true);
+            clonedVector.setAttribute("id", "cloned-snapshot-rig");
+            dome.appendChild(clonedVector);
+
+            overlay.style.display = "flex";
+        }
+
+        function closeDarshanPhotoMode() {
+            document.getElementById("darshan-snapshot-overlay").style.display = "none";
+        }
+
+        function executeDownloadDarshanImage() {
+            // Emulate production level processing completion message natively 
+            alert("✨ Darshan captured! In a full server environment, this compiles the active SVG composition matrix context parameters safely into an image download file.");
+            closeDarshanPhotoMode();
+        }
+    </script>
+</body>
+</html>
