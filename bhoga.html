@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Bhoga Offering</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved from Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+            --glass-bg: rgba(7, 30, 61, 0.75);
+            --glass-border: rgba(241, 196, 15, 0.3);
+        }
+
+        /* --- Reset & Base Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Ambient Scenery Canvas & Environmental Art --- */
+        #scenery-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Ambient Vrindavan Courtyard Elements using CSS Layering */
+        .courtyard-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(255, 234, 167, 0.15) 0%, rgba(2, 11, 20, 0) 50%, rgba(2, 11, 20, 0.4) 100%);
+        }
+
+        /* --- Layout Container --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            padding-bottom: 60px;
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(241, 196, 15, 0.1);
+            border-color: var(--gold-light);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cinzel', serif;
+            background: rgba(243, 156, 18, 0.15);
+            border: 1px solid var(--gold-primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        /* --- Dashboard Bonus Panel --- */
+        .bonus-panel {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .bonus-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .bonus-card h4 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .bonus-card p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* --- Main Content Split Layout --- */
+        .main-workspace {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .main-workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Interactive Divine Left Section (Krishna + Plate) --- */
+        .divine-sanctum {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            background: rgba(4, 19, 41, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animated Avatar Container */
+        .krishna-avatar-container {
+            height: 280px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        /* Traditional Asana/Seat Decoration */
+        .wooden-asana {
+            position: absolute;
+            bottom: 0;
+            width: 200px;
+            height: 35px;
+            background: linear-gradient(90deg, #5c3d2e 0%, #8e5431 50%, #5c3d2e 100%);
+            border: 3px solid var(--gold-primary);
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 2;
+        }
+
+        .wooden-asana::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: 10px;
+            right: 10px;
+            height: 6px;
+            background: #c0392b;
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* Pure CSS Scalable Vector Krishna Character Artwork */
+        .krishna-vector {
+            width: 160px;
+            height: 250px;
+            z-index: 3;
+            transform-origin: bottom center;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Dialogue Speech Bubble Overlay */
+        .speech-bubble {
+            position: absolute;
+            top: 10px;
+            background: var(--text-light);
+            color: var(--deep-blue);
+            padding: 12px 20px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            max-width: 220px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: var(--text-light) transparent;
+            display: block;
+            width: 0;
+        }
+
+        .speech-bubble.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Offering Plate Ecosystem --- */
+        .plate-environment {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .silver-plate {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #dfe4ea 50%, #a4b0be 80%, #747d8c 100%);
+            border: 8px solid #f1f2f6;
+            border-radius: 50%;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.6), inset 0 0 25px rgba(0,0,0,0.2), 0 0 0 2px var(--gold-primary);
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: 10px;
+            padding: 25px;
+            transition: all 0.5s ease;
+        }
+
+        .silver-plate.glowing {
+            box-shadow: 0 0 50px 15px rgba(241, 196, 15, 0.7), inset 0 0 30px rgba(241, 196, 15, 0.3);
+            transform: scale(1.03);
+        }
+
+        .flower-garland-decor {
+            position: absolute;
+            width: 310px;
+            height: 310px;
+            border: 4px dotted #ff7675;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: rotateGarland 40s linear infinite;
+        }
+
+        @keyframes rotateGarland {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Items transitioning/rendering inside the offering plate */
+        .offered-item-mini {
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            animation: dropIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .offered-item-mini:hover::after {
+            content: "✕";
+            position: absolute;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.7rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            top: -2px;
+            right: -2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .offered-item-mini svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        @keyframes dropIn {
+            0% { transform: scale(0) translateY(-30px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .plate-placeholder {
+            position: absolute;
+            font-family: 'Cinzel', serif;
+            color: rgba(7, 30, 61, 0.4);
+            font-size: 0.9rem;
+            text-align: center;
+            pointer-events: none;
+            letter-spacing: 1px;
+            padding: 0 20px;
+        }
+
+        /* --- Right Section: Food Display Panels --- */
+        .food-sanctuary {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-header-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 12px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 15px;
+            max-height: 520px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Custom Scrollbar for Premium Feel */
+        .food-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .food-grid::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 3px;
+        }
+
+        .food-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .food-card:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+            transform: translateY(-4px);
+            background: rgba(10, 61, 98, 0.6);
+        }
+
+        .food-card svg {
+            width: 55px;
+            height: 55px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+            transition: transform 0.3s ease;
+        }
+
+        .food-card:hover svg {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        .food-card h5 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .food-card p {
+            font-size: 0.72rem;
+            color: #b2bec3;
+            line-height: 1.3;
+        }
+
+        /* --- Master Action Panel Controls --- */
+        .action-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn-premium {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            background: linear-gradient(135deg, #1e3799, var(--peacock-blue));
+            border: 2px solid var(--gold-primary);
+            padding: 16px 50px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(241, 196, 15, 0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            outline: none;
+        }
+
+        .btn-premium:hover:not(:disabled) {
+            color: #020b14;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            box-shadow: 0 0 30px var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-premium:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #7f8c8d;
+        }
+
+        .status-celebration-banner {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.6rem;
+            color: var(--gold-light);
+            text-shadow: 0 0 15px var(--gold-glow);
+            margin-top: 10px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease;
+            text-align: center;
+        }
+
+        .status-celebration-banner.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .post-action-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .post-action-row.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-secondary {
+            font-family: 'Cinzel', serif;
+            background: rgba(7, 30, 61, 0.8);
+            border: 1px solid var(--gold-primary);
+            color: var(--text-light);
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--peacock-blue);
+            box-shadow: 0 0 10px rgba(241,196,15,0.2);
+        }
+
+        /* --- Traditional Temple Bell Overlay Layer --- */
+        .bell-rope {
+            position: absolute;
+            top: -40px;
+            right: 40px;
+            width: 4px;
+            height: 100px;
+            background: #a4b0be;
+            z-index: 5;
+            transform-origin: top center;
+        }
+        .temple-bell {
+            position: absolute;
+            bottom: -30px;
+            left: -18px;
+            width: 40px;
+            height: 45px;
+            background: linear-gradient(135deg, #f39c12, #d35400);
+            border: 2px solid var(--gold-light);
+            border-radius: 10px 10px 4px 4px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        }
+        @keyframes ringBell {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(15deg); }
+            40% { transform: rotate(-12deg); }
+            60% { transform: rotate(8deg); }
+            80% { transform: rotate(-4deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* --- Traditional Vectors for Indian/Vrindavan Motifs --- */
+        .svg-icon-path { fill: none; stroke: var(--gold-light); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+</head>
+<body>
+
+    <canvas id="scenery-canvas"></canvas>
+    <div class="courtyard-overlay"></div>
+
+    <div class="app-container">
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="window.history.back();">← BACK</button>
+                <h1 class="page-title">OFFER BHOGA</h1>
+            </div>
+            <div class="streak-badge">
+                <span>✨ STREAK:</span>
+                <span id="streak-count-lbl">0</span> Days
+            </div>
+        </header>
+
+        <section class="bonus-panel">
+            <div class="bonus-card">
+                <h4>TODAY'S SUGGESTED OFFERING</h4>
+                <p id="suggested-offering-lbl">Makhan Mishri & Fresh Berries</p>
+            </div>
+            <div class="bonus-card">
+                <h4>FAVORITE OF THE DAY</h4>
+                <p id="favorite-offering-lbl">Sweet Rice Pot</p>
+            </div>
+            <div class="bonus-card">
+                <h4>DAILY BLESSING</h4>
+                <p id="daily-blessing-lbl" style="font-size: 0.85rem; font-style: italic; font-weight: normal; color: #f1c40f;">"Your love is the truest ingredient."</p>
+            </div>
+        </section>
+
+        <main class="main-workspace">
+            
+            <div class="divine-sanctum">
+                <div class="bell-rope" id="temple-bell-node">
+                    <div class="temple-bell"></div>
+                </div>
+
+                <div class="speech-bubble" id="krishna-speech">...</div>
+
+                <div class="krishna-avatar-container">
+                    <svg class="krishna-vector" id="krishna-character-svg" viewBox="0 0 100 150">
+                        <path d="M35 35 L50 10 L65 35 Z" fill="#f1c40f" stroke="#f39c12" stroke-width="1.5" />
+                        <circle cx="50" cy="22" r="3" fill="#e74c3c"/>
+                        <path id="peacock-feather" d="M50 10 Q60 -5 55 -15 Q45 -5 50 10" fill="#009432" stroke="#0652dd" stroke-width="1"/>
+                        
+                        <circle cx="50" cy="45" r="18" fill="#2c3e50"/>
+                        <circle id="krishna-face" cx="50" cy="48" r="14" fill="#74b9ff"/>
+                        
+                        <path id="eye-left" d="M42 46 Q45 44 47 46" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="eye-right" d="M53 46 Q55 44 58 46" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="krishna-smile" d="M46 54 Q50 58 54 54" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+                        
+                        <path d="M36 62 L64 62 L68 95 L32 95 Z" fill="#f1c40f"/>
+                        <path d="M42 62 L50 95 L58 62" fill="none" stroke="#e67e22" stroke-width="1"/>
+
+                        <circle cx="50" cy="67" r="2" fill="#fff"/>
+                        <circle cx="46" cy="72" r="2" fill="#fff"/>
+                        <circle cx="54" cy="72" r="2" fill="#fff"/>
+                        
+                        <rect id="divine-flute" x="30" y="50" width="45" height="4" rx="2" fill="#d35400" transform="rotate(-10 50 52)" style="display:none;"/>
+                    </svg>
+                    <div class="wooden-asana"></div>
+                </div>
+
+                <div class="plate-environment">
+                    <div class="flower-garland-decor"></div>
+                    <div class="silver-plate" id="main-offering-plate" onclick="handlePlateRemoval(event)">
+                        <div class="plate-placeholder" id="placeholder-msg">Lovelingly select items from the sanctuary panel to place on the offering plate...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-sanctuary">
+                <div class="panel-header-meta">
+                    <span style="font-family:'Cinzel', serif; color: var(--gold-light);">SANCTUARY ITEMS</span>
+                    <span style="font-size:0.85rem; color:#a4b0be;" id="selected-counter-lbl">Selected: 0 Items</span>
+                </div>
+
+                <div class="food-grid" id="food-items-deck">
+                    </div>
+            </div>
+        </main>
+
+        <footer class="action-container">
+            <button class="btn-premium" id="primary-offer-btn" onclick="executeDevotionalOffering()">OFFER TO KRISHNA</button>
+            <div class="status-celebration-banner" id="celebration-lbl">🌸 Bhoga Accepted 🌸</div>
+            
+            <div class="post-action-row" id="post-action-controls">
+                <button class="btn-secondary" onclick="resetOfferingInterface()">OFFER AGAIN</button>
+                <button class="btn-secondary" onclick="window.location.reload();">REFRESH SANCTUM</button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        /* --- Food Database Matrix Structuring --- */
+        const FOOD_DATABASE = [
+            { id: "makhan", name: "Makhan Mishri", desc: "Fresh churned white butter with crystallized sugar lumps.", icon: `<svg viewBox="0 0 64 64"><circle cx="32" cy="36" r="18" fill="#f5f6fa"/><ellipse cx="32" cy="24" r="14" fill="#f1c40f" opacity="0.3"/><circle cx="26" cy="34" r="3" fill="#fff"/><circle cx="38" cy="38" r="2" fill="#fff"/></svg>` },
+            { id: "butter", name: "Pure Butter", desc: "Traditional aromatic golden butter directly from dairy.", icon: `<svg viewBox="0 0 64 64"><rect x="18" y="22" width="28" height="24" rx="4" fill="#f1c40f"/><path d="M18 30 L46 30" stroke="#f39c12" stroke-width="2"/></svg>` },
+            { id: "milk", name: "Warm Milk", desc: "Pure earthen pot containing warm milk steeped with saffron strands.", icon: `<svg viewBox="0 0 64 64"><path d="M22 24 Q32 16 42 24 L38 52 L26 52 Z" fill="#ecf0f1"/><ellipse cx="32" cy="24" r="10" fill="#fff"/></svg>` },
+            { id: "curd", name: "Sweet Curd", desc: "Thick creamy traditional yogurt prepared inside clay vessels.", icon: `<svg viewBox="0 0 64 64"><path d="M16 26 Q32 20 48 26 L42 54 L22 54 Z" fill="#dcdde1"/><ellipse cx="32" cy="26" r="16" fill="#f5f6fa"/></svg>` },
+            { id: "laddu", name: "Besan Laddu", desc: "Delectable roasted gram flour rounds rich with pure ghee.", icon: `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="16" fill="#e67e22"/><circle cx="28" cy="26" r="1.5" fill="#fff"/><circle cx="36" cy="34" r="2" fill="#fff"/></svg>` },
+            { id: "sweetrice", name: "Sweet Rice", desc: "Delicately cooked fine rice infused with condensed milk matrix.", icon: `<svg viewBox="0 0 64 64"><path d="M14 32 Q32 46 50 32 L44 50 L20 50 Z" fill="#bdc3c7"/><ellipse cx="32" cy="32" r="18" fill="#fff"/></svg>` },
+            { id: "banana", name: "Vrindavan Banana", desc: "Ripe sweet native organic bananas from local forest grooves.", icon: `<svg viewBox="0 0 64 64"><path d="M20 16 Q35 20 40 48 Q24 40 20 16" fill="#f1c40f"/><path d="M38 46 Q42 50 44 52" stroke="#27ae60" stroke-width="3"/></svg>` },
+            { id: "mango", name: "Ripe Mango", desc: "Luscious golden mango harvest picked directly at dawn.", icon: `<svg viewBox="0 0 64 64"><path d="M32 16 Q48 20 44 46 Q28 48 24 32 Q24 16 32 16" fill="#ffb8b8"/><path d="M32 16 Q48 20 44 46" fill="#fffa65"/></svg>` }
+        ];
+
+        const SPEECH_RESPONSES = [
+            "Your devotion brings immense joy to My heart.",
+            "Exquisite offering, Sakha! The taste of your love is sweetest.",
+            "May this interactive love transform completely into Prasadam.",
+            "I accept this with absolute joy. You remembered My favorites!"
+        ];
+
+        /* --- Local State Arrays & References --- */
+        let activePlateInventory = [];
+        let executionInProgress = false;
+
+        /* --- Ambient Scenery Dynamic Canvas Processing Engine --- */
+        const canvas = document.getElementById('scenery-canvas');
+        const ctx = canvas.getContext('2d');
+        let scenicElements = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class ScenicParticle {
+            constructor(type) {
+                this.type = type; // 'flower', 'butterfly', 'light'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'flower' ? -20 : Math.random() * canvas.height + canvas.height;
+                this.size = Math.random() * 4 + 2;
+                this.speedY = this.type === 'flower' ? (Math.random() * 1 + 0.5) : -(Math.random() * 0.6 + 0.2);
+                this.speedX = Math.random() * 1 - 0.5;
+                this.alpha = Math.random() * 0.6 + 0.3;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.angle += 0.01;
+                if (this.y < -30 || this.y > canvas.height + 30 || this.x < -30 || this.x > canvas.width + 30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.globalAlpha = this.alpha;
+                if (this.type === 'flower') {
+                    ctx.fillStyle = "#ff7675";
+                    for(let i=0; i<5; i++) {
+                        ctx.rotate(Math.PI / 2.5);
+                        ctx.beginPath();
+                        ctx.ellipse(0, 5, this.size, this.size*1.5, 0, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size*0.6, 0, Math.PI*2);
+                    ctx.fillStyle = "#f1c40f";
+                    ctx.fill();
+                } else {
+                    // Soft Divine Light Particles
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size, 0, Math.PI*2);
+                    ctx.fillStyle = "rgba(241, 196, 15, 0.8)";
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = "#f1c40f";
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Initialize Background Scene Particles Ecosystem
+        for(let i=0; i<30; i++) scenicElements.push(new ScenicParticle('light'));
+        for(let i=0; i<15; i++) scenicElements.push(new ScenicParticle('flower'));
+
+        function runSceneryEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw deep traditional background sky configuration frame
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            skyGrad.addColorStop(0, '#031b33');
+            skyGrad.addColorStop(0.5, '#072e59');
+            skyGrad.addColorStop(1, '#020b14');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let element of scenicElements) {
+                element.update();
+                element.draw();
+            }
+            requestAnimationFrame(runSceneryEngine);
+        }
+        runSceneryEngine();
+
+        /* --- Initialization & Data Synchronization Logic --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            renderSanctuaryDeck();
+            synchronizeStorageMetrics();
+            executeIdleAnimationLoop();
+        });
+
+        function synchronizeStorageMetrics() {
+            let currentStreak = parseInt(localStorage.getItem("bhoga_streak") || "0");
+            let totalOfferings = parseInt(localStorage.getItem("bhoga_total") || "0");
+            let lastDate = localStorage.getItem("bhoga_last_date");
+
+            const todayStr = new Date().toDateString();
+            if (lastDate === todayStr) {
+                // Already offered today context
+                document.getElementById('daily-blessing-lbl').innerText = "Prasadam received for today. Your inner sanctuary remains blessed.";
+            }
+
+            document.getElementById("streak-count-lbl").innerText = currentStreak;
+        }
+
+        function renderSanctuaryDeck() {
+            const container = document.getElementById("food-items-deck");
+            container.innerHTML = "";
+            FOOD_DATABASE.forEach(item => {
+                let card = document.createElement("div");
+                card.className = "food-card";
+                card.onclick = () => addItemToPlate(item.id);
+                card.innerHTML = `
+                    ${item.icon}
+                    <h5>${item.name}</h5>
+                    <p>${item.desc}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        /* --- Interactive Core Mechanics --- */
+        function addItemToPlate(itemId) {
+            if (executionInProgress) return;
+            if (activePlateInventory.length >= 6) return; // Cap for visual spacing on plate
+
+            const matchedTemplate = FOOD_DATABASE.find(f => f.id === itemId);
+            activePlateInventory.push(matchedTemplate);
+            refreshPlateUIRender();
+            triggerCharacterReaction();
+        }
+
+        function handlePlateRemoval(event) {
+            if (executionInProgress) return;
+            const targetItem = event.target.closest('.offered-item-mini');
+            if (!targetItem) return;
+
+            const targetIndex = parseInt(targetItem.dataset.index);
+            activePlateInventory.splice(targetIndex, 1);
+            refreshPlateUIRender();
+        }
+
+        function refreshPlateUIRender() {
+            const plate = document.getElementById("main-offering-plate");
+            const placeholder = document.getElementById("placeholder-msg");
+            
+            // Clear existing elements except the baseline placeholder
+            document.querySelectorAll(".offered-item-mini").forEach(el => el.remove());
+
+            if (activePlateInventory.length > 0) {
+                placeholder.style.display = "none";
+                activePlateInventory.forEach((item, index) => {
+                    let miniNode = document.createElement("div");
+                    miniNode.className = "offered-item-mini";
+                    miniNode.dataset.index = index;
+                    miniNode.innerHTML = item.icon;
+                    plate.appendChild(miniNode);
+                });
+            } else {
+                placeholder.style.display = "block";
+            }
+
+            document.getElementById("selected-counter-lbl").innerText = `Selected: ${activePlateInventory.length} Items`;
+        }
+
+        /* --- AI Avatar Character State Machinery (Animations Framework) --- */
+        const animationsList = ['smile', 'blink', 'featherTwitch', 'lookAway', 'playFluteMode', 'meditatePosture'];
+        let lastPlayedAnimation = "";
+
+        function executeIdleAnimationLoop() {
+            if (executionInProgress) return;
+
+            let nextPool = animationsList.filter(anim => anim !== lastPlayedAnimation);
+            let chosenAnimation = nextPool[Math.floor(Math.random() * nextPool.length)];
+            lastPlayedAnimation = chosenAnimation;
+
+            applyAnimationState(chosenAnimation);
+
+            // Re-queue next automated state cycle execution
+            setTimeout(executeIdleAnimationLoop, Math.random() * 4000 + 5000);
+        }
+
+        function applyAnimationState(state) {
+            const leftEye = document.getElementById("eye-left");
+            const rightEye = document.getElementById("eye-right");
+            const smile = document.getElementById("krishna-smile");
+            const flute = document.getElementById("divine-flute");
+            const characterSvg = document.getElementById("krishna-character-svg");
+
+            // Reset baselines configurations safely
+            leftEye.setAttribute("d", "M42 46 Q45 44 47 46");
+            rightEye.setAttribute("d", "M53 46 Q55 44 58 46");
+            smile.setAttribute("d", "M46 54 Q50 58 54 54");
+            flute.style.display = "none";
+            characterSvg.style.transform = "scale(1)";
+
+            switch(state) {
+                case 'blink':
+                    leftEye.setAttribute("d", "M42 46 L47 46");
+                    rightEye.setAttribute("d", "M53 46 L58 46");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M44 52 Q50 60 56 52");
+                    characterSvg.style.transform = "scale(1.03)";
+                    break;
+                case 'lookAway':
+                    leftEye.setAttribute("d", "M44 46 Q46 44 48 46");
+                    rightEye.setAttribute("d", "M55 46 Q57 44 59 46");
+                    break;
+                case 'playFluteMode':
+                    flute.style.display = "block";
+                    smile.setAttribute("d", "M48 54 Q50 55 52 54");
+                    break;
+                case 'meditatePosture':
+                    leftEye.setAttribute("d", "M41 47 Q44 49 47 47");
+                    rightEye.setAttribute("d", "M53 47 Q56 49 59 47");
+                    break;
+            }
+        }
+
+        function triggerCharacterReaction() {
+            // Briefly trigger curious watching stance
+            applyAnimationState('smile');
+            const speech = document.getElementById("krishna-speech");
+            speech.innerText = "That looks delicious, Sakha...";
+            speech.classList.add("visible");
+            setTimeout(() => speech.classList.remove("visible"), 2200);
+        }
+
+        /* --- Devotional Complete Action Scripting --- */
+        function executeDevotionalOffering() {
+            if (activePlateInventory.length === 0 || executionInProgress) return;
+            executionInProgress = true;
+
+            // Interface Lockdown state
+            document.getElementById("primary-offer-btn").disabled = true;
+            document.getElementById("main-offering-plate").classList.add("glowing");
+
+            // Swing temple bell animation triggers
+            const bell = document.getElementById("temple-bell-node");
+            bell.style.animation = "ringBell 1.5s ease-in-out infinite";
+
+            // Put avatar to meditative state (Eyes Closed)
+            applyAnimationState('meditatePosture');
+
+            // Instantly spawn intensive beautiful decorative flower showers cascading
+            for(let i=0; i<30; i++) {
+                setTimeout(() => {
+                    scenicElements.push(new ScenicParticle('flower'));
+                }, i * 50);
+            }
+
+            // Phase 2: Beautiful acceptance revelation sequence execution block
+            setTimeout(() => {
+                bell.style.animation = "none";
+                applyAnimationState('smile');
+                
+                // Present Holy Speech Matrix
+                const speech = document.getElementById("krishna-speech");
+                speech.innerText = SPEECH_RESPONSES[Math.floor(Math.random() * SPEECH_RESPONSES.length)];
+                speech.classList.add("visible");
+
+                // Render success messaging banners transparently
+                document.getElementById("celebration-lbl").classList.add("visible");
+                document.getElementById("post-action-controls").classList.add("visible");
+
+                // Local Storage Matrix State Updates execution 
+                commitMetricsToStorage();
+
+            }, 3500);
+        }
+
+        function commitMetricsToStorage() {
+            const todayStr = new Date().toDateString();
+            let lastDate = localStorage.getItem("bhoga_last_date");
+            let currentStreak = parseInt(localStorage.getItem("bhoga_streak") || "0");
+            let totalOfferings = parseInt(localStorage.getItem("bhoga_total") || "0");
+
+            totalOfferings += 1;
+            localStorage.setItem("bhoga_total", totalOfferings.toString());
+
+            if (lastDate !== todayStr) {
+                // Evaluate if consecutive sequence day matches perfectly
+                let yesterdayStr = new Date(Date.now() - 86400000).toDateString();
+                if (lastDate === yesterdayStr || currentStreak === 0) {
+                    currentStreak += 1;
+                } else {
+                    currentStreak = 1;
+                }
+                localStorage.setItem("bhoga_streak", currentStreak.toString());
+                localStorage.setItem("bhoga_last_date", todayStr);
+                
+                document.getElementById("streak-count-lbl").innerText = currentStreak;
+            }
+        }
+
+        function resetOfferingInterface() {
+            activePlateInventory = [];
+            executionInProgress = false;
+            
+            document.getElementById("primary-offer-btn").disabled = false;
+            document.getElementById("main-offering-plate").classList.remove("glowing");
+            document.getElementById("krishna-speech").classList.remove("visible");
+            document.getElementById("celebration-lbl").classList.remove("visible");
+            document.getElementById("post-action-controls").classList.remove("visible");
+
+            refreshPlateUIRender();
+            applyAnimationState('smile');
+            executeIdleAnimationLoop();
+        }
+    </script>
+</body>
+</html>
