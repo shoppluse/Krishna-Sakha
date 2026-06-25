@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Japa Meditation Companion</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+            --glass-bg: rgba(7, 30, 61, 0.75);
+            --glass-border: rgba(241, 196, 15, 0.3);
+        }
+
+        /* --- Reset & Base Layout --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Ambient Scenery Canvas --- */
+        #scenery-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .mist-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(255, 243, 205, 0.15) 0%, rgba(2, 11, 20, 0) 50%, rgba(2, 11, 20, 0.3) 100%);
+        }
+
+        /* --- App Container Layout --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 15px 100px 15px;
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(241,196,15,0.1);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .streak-badge {
+            font-family: 'Cinzel', serif;
+            background: rgba(243, 156, 18, 0.15);
+            border: 1px solid var(--gold-primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* --- Workspace Architecture --- */
+        .workspace-grid {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            gap: 25px;
+            align-items: start;
+        }
+
+        @media (max-width: 950px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Left Side Panel: Meditation Sanctum & Avatar --- */
+        .meditation-sanctum {
+            background: rgba(4, 19, 41, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 520px;
+            justify-content: space-between;
+        }
+
+        .speech-bubble {
+            background: var(--text-light);
+            color: var(--deep-blue);
+            padding: 12px 18px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            max-width: 250px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            position: absolute;
+            top: 25px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            z-index: 15;
+        }
+
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--text-light) transparent;
+        }
+
+        .speech-bubble.visible { opacity: 1; transform: translateY(0); }
+
+        .avatar-kadamba-dome {
+            height: 280px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        /* Traditional Kadamba Environmental Rig */
+        .kadamba-tree-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 70px;
+            height: 260px;
+            background: linear-gradient(90deg, #402516 0%, #5c3826 100%);
+            border-radius: 0 30px 0 0;
+            z-index: 1;
+        }
+
+        .krishna-avatar-svg {
+            width: 140px;
+            height: 200px;
+            z-index: 3;
+            transform-origin: bottom center;
+            transition: transform 0.6s ease;
+        }
+
+        .asana-seat {
+            position: absolute;
+            bottom: 0;
+            width: 180px;
+            height: 16px;
+            background: linear-gradient(90deg, #a0522d 0%, #cd853f 50%, #a0522d 100%);
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            z-index: 2;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        /* --- Right Side Panel: Main Japa Module Interface --- */
+        .japa-control-sanctuary {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Circular Digital Mala Framework */
+        .mala-container-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .mala-wheel-space {
+            width: 260px;
+            height: 260px;
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mala-svg-ring {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+            overflow: visible;
+        }
+
+        .bead-node {
+            fill: #d35400;
+            stroke: var(--gold-primary);
+            stroke-width: 1;
+            transition: fill 0.2s, r 0.2s, filter 0.2s;
+            cursor: pointer;
+        }
+
+        .bead-node.active-bead {
+            fill: var(--gold-light);
+            r: 7;
+            filter: drop-shadow(0 0 8px var(--gold-glow));
+        }
+
+        .bead-node.passed-bead {
+            fill: #b33921;
+            stroke: #ff7675;
+        }
+
+        /* Inner Mala Metrics Text Readout */
+        .mala-center-readout {
+            position: absolute;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .center-bead-number {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.2rem;
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-glow);
+            line-height: 1;
+        }
+
+        .center-label {
+            font-size: 0.75rem;
+            color: #a4b0be;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+
+        /* Master Chant Hot Button */
+        .btn-chant-master {
+            width: 100%;
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            color: var(--text-light);
+            background: linear-gradient(135deg, #1e3799, var(--peacock-blue));
+            border: 2px solid var(--gold-primary);
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(241, 196, 15, 0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            outline: none;
+            margin-top: 5px;
+        }
+
+        .btn-chant-master:hover {
+            color: #020b14;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            box-shadow: 0 0 25px var(--gold-glow);
+        }
+
+        /* Session Dashboard Metrics Grid */
+        .metrics-dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .metric-mini-card {
+            background: rgba(2, 11, 20, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .metric-mini-card h5 {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            color: #a4b0be;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .metric-mini-card p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        /* Timer Sub-controls */
+        .timer-controls-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-timer-sub {
+            flex: 1;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #dcdde1;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-timer-sub:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--gold-primary);
+            color: #fff;
+        }
+
+        /* --- Goal Configurator Block --- */
+        .goals-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px 20px;
+            backdrop-filter: blur(12px);
+        }
+
+        .goals-card h4 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .goals-options-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .goal-chip {
+            background: rgba(2, 11, 20, 0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #a4b0be;
+        }
+
+        .goal-chip.active-goal {
+            background: rgba(243, 156, 18, 0.15);
+            border-color: var(--gold-primary);
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        /* --- Premium Pure HTML/CSS Statistics Rendering Block --- */
+        .stats-section-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            margin-top: 5px;
+        }
+
+        .stats-section-card h4 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(241,196,15,0.15);
+            padding-bottom: 6px;
+        }
+
+        .chart-container-bar {
+            height: 130px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding-top: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .chart-column-bar {
+            width: 32px;
+            background: linear-gradient(0deg, var(--peacock-blue) 0%, var(--gold-primary) 100%);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            box-shadow: 0 0 10px rgba(241,196,15,0.15);
+        }
+
+        .chart-column-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        .chart-labels-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 6px;
+            font-size: 0.7rem;
+            color: #a4b0be;
+            text-transform: uppercase;
+        }
+
+        /* --- Bottom Global Navigation Deck --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 850px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 6px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #a4b0be;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 18 height: 18px;
+            margin-bottom: 3px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-light);
+            background: rgba(255,255,255,0.04);
+        }
+
+        /* --- Celebration Completion Banner States --- */
+        .completion-banner-overlay {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.6rem;
+            color: var(--gold-light);
+            text-shadow: 0 0 15px var(--gold-glow);
+            text-align: center;
+            margin-top: 15px;
+            opacity: 0;
+            display: none;
+            transition: all 0.5s ease;
+        }
+        .completion-banner-overlay.visible {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="scenery-canvas"></canvas>
+    <div class="mist-overlay"></div>
+
+    <div class="app-container">
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="window.history.back();">← LEAVE</button>
+                <h1 class="page-title">JAPA MEDITATION</h1>
+            </div>
+            <div class="streak-badge">
+                <span>✨ STREAK:</span>
+                <span id="streak-lbl-node">0</span> Days
+            </div>
+        </header>
+
+        <main class="workspace-grid">
+            
+            <div class="meditation-sanctum">
+                <div class="speech-bubble" id="avatar-speech-node">...</div>
+
+                <div class="avatar-kadamba-dome">
+                    <div class="kadamba-tree-trunk"></div>
+                    
+                    <svg class="krishna-avatar-svg" id="krishna-sitting-vector" viewBox="0 0 100 150">
+                        <circle cx="50" cy="56" r="18" fill="#1e272e"/>
+                        <circle cx="50" cy="59" r="13.5" fill="#74b9ff"/> <path d="M36 45 L50 18 L64 45 Z" fill="#f1c40f" stroke="#f39c12"/>
+                        <path d="M50 18 Q62 2 56 -8 Q46 2 50 18" fill="#009432"/>
+                        <path d="M49 39 L51 39 L50 45 Z" fill="#fff"/>
+                        <path id="eye-l" d="M42 57 Q45 55 47 57" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="eye-r" d="M53 57 Q55 55 58 57" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="krishna-smile" d="M45 65 Q50 69 55 65" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+                        <path id="krishna-legs" d="M26 112 Q50 134 74 112 Z" fill="#f1c40f"/>
+                        <rect id="divine-flute" x="32" y="65" width="36" height="3" rx="1.5" fill="#d35400" style="display:none;"/>
+                    </svg>
+                    <div class="asana-seat"></div>
+                </div>
+
+                <div class="completion-banner-overlay" id="celebration-title-lbl">🌸 Today's Japa Complete 🌸</div>
+            </div>
+
+            <div class="japa-control-sanctuary">
+                
+                <div class="mala-container-card">
+                    <div class="mala-wheel-space">
+                        <svg class="mala-svg-ring" id="mala-beads-ring-svg" viewBox="0 0 200 200">
+                            </svg>
+                        <div class="mala-center-readout">
+                            <div class="center-bead-number" id="current-bead-lbl">0</div>
+                            <div class="center-label">Current Bead</div>
+                        </div>
+                    </div>
+
+                    <div class="metrics-dashboard-grid">
+                        <div class="metric-mini-card">
+                            <h5>Completed Rounds</h5>
+                            <p id="completed-rounds-lbl">0</p>
+                        </div>
+                        <div class="metric-mini-card">
+                            <h5>Session Timer</h5>
+                            <p id="session-time-lbl">00:00</p>
+                        </div>
+                    </div>
+
+                    <div class="timer-controls-row">
+                        <button class="btn-timer-sub" id="btn-pause-resume" onclick="toggleTimerState()">PAUSE</button>
+                        <button class="btn-timer-sub" onclick="resetActiveMeditationSession()">RESET</button>
+                    </div>
+                </div>
+
+                <button class="btn-chant-master" id="master-chant-trigger" onclick="advanceJapaBeadProgressStep()">CHANT HARE KRISHNA</button>
+
+                <div class="goals-card">
+                    <h4>DAILY ROUNDS GOAL</h4>
+                    <div class="goals-options-row" id="goals-chips-box">
+                        <div class="goal-chip" data-value="1" onclick="updateDailyRoundsGoalMetric(1)">1</div>
+                        <div class="goal-chip" data-value="4" onclick="updateDailyRoundsGoalMetric(4)">4</div>
+                        <div class="goal-chip" data-value="8" onclick="updateDailyRoundsGoalMetric(8)">8</div>
+                        <div class="goal-chip" data-value="16" onclick="updateDailyRoundsGoalMetric(16)">16</div>
+                    </div>
+                </div>
+
+                <div class="stats-section-card">
+                    <h4>WEEKLY READOUT PROGRESS</h4>
+                    <div class="chart-container-bar" id="weekly-chart-frame">
+                        <div class="chart-column-bar" style="height: 20%;" data-value="1"></div>
+                        <div class="chart-column-bar" style="height: 45%;" data-value="3"></div>
+                        <div class="chart-column-bar" style="height: 70%;" data-value="5"></div>
+                        <div class="chart-column-bar" style="height: 15%;" data-value="1"></div>
+                        <div class="chart-column-bar" id="today-live-chart-node" style="height: 5%;" data-value="0"></div>
+                    </div>
+                    <div class="chart-labels-row">
+                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Today</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bottom-nav">
+            <a class="nav-item" onclick="window.history.back();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+            <a class="nav-item" onclick="location.href='play.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Play</a>
+            <a class="nav-item" onclick="location.href='bhoga.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Bhoga</a>
+            <a class="nav-item" onclick="location.href='arati.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H7"/></svg>Arati</a>
+            <a class="nav-item" onclick="location.href='dress.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Dress</a>
+            <a class="nav-item" onclick="location.href='stories.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Stories</a>
+            <a class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>Japa</a>
+        </footer>
+    </div>
+
+    <script>
+        /* ================= REGISTRY DECLARATIONS & CONSTANTS CONFIGS ================= */
+        const TOTAL_BEADS_COUNT = 108;
+        const DIVINE_ENCOURAGEMENT_PROMPTS = [
+            "Take your time, Sakha. Every single bead connects your awareness deeper.",
+            "Continue whenever you feel completely ready. There is infinite peace in remembrance.",
+            "The early morning breeze of Vrindavan accompanies your internal sound vibration."
+        ];
+
+        const COMPLETION_DIVINE_SPEECH = [
+            "Thank you for chanting with such clear devotion today.",
+            "May your sacred remembrance always deepen into pure bliss.",
+            "Wonderful. Your internal sanctuary is radiating pure light."
+        ];
+
+        /* --- Local State Arrays Operational Fields --- */
+        let activeBeadIndex = 0;
+        let completedRoundsTrack = 0;
+        let configuredDailyGoalRounds = 4;
+        
+        let elapsedSessionSeconds = 0;
+        let timerTickerInterval = null;
+        let timerActiveState = false;
+        let lastActionTimestamp = Date.now();
+
+        /* --- Ambient Scenery Dynamics Canvas Render Engine --- */
+        const canvas = document.getElementById('scenery-canvas');
+        const ctx = canvas.getContext('2d');
+        let scenicFloatingParticlesArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class PeacefulSceneryParticle {
+            constructor(type) {
+                this.type = type; // 'petal', 'sparkle'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 1.2;
+                this.speedY = this.type === 'petal' ? (Math.random() * 0.4 + 0.15) : -(Math.random() * 0.3 + 0.1);
+                this.speedX = Math.random() * 0.6 - 0.3;
+                this.alpha = Math.random() * 0.5 + 0.2;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30 || this.y > canvas.height + 30 || this.x < -30 || this.x > canvas.width + 30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                if(this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#ff7675"; // Tender rose flower petal coloring
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size * 1.4, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = "rgba(241, 196, 15, 0.6)"; // Golden mist particle dot
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Populates Base Ambient Element Collections Arrays Blocks
+        for(let i=0; i<15; i++) scenicFloatingParticlesArray.push(new PeacefulSceneryParticle('petal'));
+        for(let i=15; i<40; i++) scenicFloatingParticlesArray.push(new PeacefulSceneryParticle('sparkle'));
+
+        function runSceneryGraphicsEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Render smooth golden early dawn morning backdrop space gradient directly via canvas frame
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            skyGrad.addColorStop(0, '#041c38');
+            skyGrad.addColorStop(0.5, '#0d355e');
+            skyGrad.addColorStop(1, '#18233c');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let element of scenicFloatingParticlesArray) {
+                element.update();
+                element.draw();
+            }
+            requestAnimationFrame(runSceneryGraphicsEngine);
+        }
+        runSceneryGraphicsEngine();
+
+        /* --- Life-cycle Initializations and LocalStorage Processing --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeDigitalMalaRingGeometry();
+            syncStateMetricsFromStorage();
+            startSessionTimerTicker();
+            initializeCharacterBehaviorLoop();
+            setupKeyboardInteractionListeners();
+            setupBreakInactivityChecker();
+        });
+
+        function syncStateMetricsFromStorage() {
+            let streak = parseInt(localStorage.getItem("japa_streak") || "0");
+            completedRoundsTrack = parseInt(localStorage.getItem("japa_today_rounds") || "0");
+            activeBeadIndex = parseInt(localStorage.getItem("japa_current_bead") || "0");
+            configuredDailyGoalRounds = parseInt(localStorage.getItem("japa_daily_goal") || "4");
+
+            document.getElementById("streak-lbl-node").innerText = streak;
+            document.getElementById("completed-rounds-lbl").innerText = completedRoundsTrack;
+            document.getElementById("current-bead-lbl").innerText = activeBeadIndex;
+
+            updateGoalSelectionChipsUIRender();
+            synchronizeMalaRingBeadsFillStates();
+            updateWeeklyChartVisualization();
+        }
+
+        function initializeDigitalMalaRingGeometry() {
+            const ringSvg = document.getElementById("mala-beads-ring-svg");
+            const centerX = 100;
+            const centerY = 100;
+            const radius = 84;
+
+            for(let i = 0; i < TOTAL_BEADS_COUNT; i++) {
+                let angle = (i * 2 * Math.PI) / TOTAL_BEADS_COUNT;
+                let beadX = centerX + radius * Math.cos(angle);
+                let beadY = centerY + radius * Math.sin(angle);
+
+                let circleNode = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circleNode.setAttribute("cx", beadX);
+                circleNode.setAttribute("cy", beadY);
+                circleNode.setAttribute("r", "4.5");
+                circleNode.setAttribute("class", "bead-node");
+                circleNode.setAttribute("id", `mala-bead-node-${i}`);
+                circleNode.onclick = () => jumpToSpecificBeadTarget(i);
+
+                ringSvg.appendChild(circleNode);
+            }
+        }
+
+        /* --- Mala Advancement Logic Engines --- */
+        function advanceJapaBeadProgressStep() {
+            if(!timerActiveState) toggleTimerState(); // Auto activate session clock upon clicking chant action
+            
+            lastActionTimestamp = Date.now();
+            activeBeadIndex += 1;
+
+            if(activeBeadIndex > TOTAL_BEADS_COUNT) {
+                // One full round completion cycle intercept executed successfully
+                activeBeadIndex = 1;
+                completedRoundsTrack += 1;
+                document.getElementById("completed-rounds-lbl").innerText = completedRoundsTrack;
+                
+                localStorage.setItem("japa_today_rounds", completedRoundsTrack.toString());
+                triggerRoundCompletionVisualCelebration();
+            }
+
+            document.getElementById("current-bead-lbl").innerText = activeBeadIndex;
+            localStorage.setItem("japa_current_bead", activeBeadIndex.toString());
+
+            synchronizeMalaRingBeadsFillStates();
+            evaluateSessionGoalCompletionParameters();
+        }
+
+        function jumpToSpecificBeadTarget(targetIdx) {
+            activeBeadIndex = targetIdx;
+            document.getElementById("current-bead-lbl").innerText = activeBeadIndex;
+            localStorage.setItem("japa_current_bead", activeBeadIndex.toString());
+            synchronizeMalaRingBeadsFillStates();
+        }
+
+        function synchronizeMalaRingBeadsFillStates() {
+            for(let i=0; i<TOTAL_BEADS_COUNT; i++) {
+                const node = document.getElementById(`mala-bead-node-${i}`);
+                if(!node) continue;
+
+                node.className.baseVal = "bead-node";
+                if(i === activeBeadIndex - 1) {
+                    node.classList.add("active-bead");
+                } else if(i < activeBeadIndex - 1) {
+                    node.classList.add("passed-bead");
+                }
+            }
+        }
+
+        function updateDailyRoundsGoalMetric(roundsVal) {
+            configuredDailyGoalRounds = roundsVal;
+            localStorage.setItem("japa_daily_goal", roundsVal.toString());
+            updateGoalSelectionChipsUIRender();
+            evaluateSessionGoalCompletionParameters();
+        }
+
+        function updateGoalSelectionChipsUIRender() {
+            document.querySelectorAll(".goal-chip").forEach(chip => {
+                chip.classList.remove("active-goal");
+                if(parseInt(chip.dataset.value) === configuredDailyGoalRounds) {
+                    chip.classList.add("active-goal");
+                }
+            });
+        }
+
+        function setupKeyboardInteractionListeners() {
+            window.addEventListener("keydown", (event) => {
+                if(event.code === "Space") {
+                    event.preventDefault(); // Suspend page scroll default action
+                    advanceJapaBeadProgressStep();
+                }
+            });
+        }
+
+        /* --- Session Core Clock Timer Management Engines --- */
+        function startSessionTimerTicker() {
+            timerActiveState = true;
+            timerTickerInterval = setInterval(() => {
+                if(timerActiveState) {
+                    elapsedSessionSeconds += 1;
+                    let mins = Math.floor(elapsedSessionSeconds / 60).toString().padStart(2, '0');
+                    let secs = (elapsedSessionSeconds % 60).toString().padStart(2, '0');
+                    document.getElementById("session-time-lbl").innerText = `${mins}:${secs}`;
+                }
+            }, 1000);
+        }
+
+        function toggleTimerState() {
+            timerActiveState = !timerActiveState;
+            document.getElementById("btn-pause-resume").innerText = timerActiveState ? "PAUSE" : "RESUME";
+        }
+
+        function resetActiveMeditationSession() {
+            elapsedSessionSeconds = 0;
+            activeBeadIndex = 0;
+            document.getElementById("session-time-lbl").innerText = "00:00";
+            document.getElementById("current-bead-lbl").innerText = "0";
+            synchronizeMalaRingBeadsFillStates();
+        }
+
+        /* --- Visual Celebrations & Milestones Logic Scripts --- */
+        function triggerRoundCompletionVisualCelebration() {
+            // Drop a rich splash shower of rose petals smoothly into canvas tracking frames array list
+            for (let i = 0; i < 20; i++) {
+                scenicFloatingParticlesArray.push(new PeacefulSceneryParticle('petal'));
+            }
+            triggerCharacterJoyfulReaction(false);
+            updateWeeklyChartVisualization();
+        }
+
+        function evaluateSessionGoalCompletionParameters() {
+            if(completedRoundsTrack >= configuredDailyGoalRounds) {
+                const banner = document.getElementById("celebration-title-lbl");
+                if(!banner.classList.contains("visible")) {
+                    banner.classList.add("visible");
+                    triggerCharacterJoyfulTreatmentSequence();
+                    commitStreakToStorage();
+                }
+            }
+        }
+
+        function commitStreakToStorage() {
+            const todayStr = new Date().toDateString();
+            let lastDate = localStorage.getItem("japa_last_date");
+            let currentStreak = parseInt(localStorage.getItem("japa_streak") || "0");
+
+            if(lastDate !== todayStr) {
+                let yesterdayStr = new Date(Date.now() - 86400000).toDateString();
+                if(lastDate === yesterdayStr || currentStreak === 0) {
+                    currentStreak += 1;
+                } else {
+                    currentStreak = 1;
+                }
+                localStorage.setItem("japa_streak", currentStreak.toString());
+                localStorage.setItem("japa_last_date", todayStr);
+                document.getElementById("streak-lbl-node").innerText = currentStreak;
+            }
+        }
+
+        function updateWeeklyChartVisualization() {
+            const node = document.getElementById("today-live-chart-node");
+            if(node) {
+                let targetHeightPct = Math.min((completedRoundsTrack / configuredDailyGoalRounds) * 100, 100);
+                node.style.height = `${Math.max(targetHeightPct, 8)}%`;
+                node.setAttribute("data-value", completedRoundsTrack.toString());
+            }
+        }
+
+        /* --- Inactivity Check Break Reminders Systems --- */
+        function setupBreakInactivityChecker() {
+            setInterval(() => {
+                if(Date.now() - lastActionTimestamp > 25000 && timerActiveState) {
+                    // Visitor has gone completely quiet/inactive during continuous session timing tracking
+                    const bubble = document.getElementById("avatar-speech-node");
+                    bubble.innerText = DIVINE_ENCOURAGEMENT_PROMPTS[Math.floor(Math.random() * DIVINE_ENCOURAGEMENT_PROMPTS.length)];
+                    bubble.classList.add("visible");
+                    setTimeout(() => bubble.classList.remove("visible"), 5000);
+                    lastActionTimestamp = Date.now(); // Postpone checking interval smoothly
+                }
+            }, 10000);
+        }
+
+        /* --- Seated Avatar Autonomous Behavior Engine Loops --- */
+        const aiBehaviorsPoolList = ['smile', 'blink', 'playFluteMode', 'meditatePosture'];
+        let lastPlayedBehavior = "";
+
+        function initializeCharacterBehaviorLoop() {
+            let nextPool = aiBehaviorsPoolList.filter(b => b !== lastPlayedBehavior);
+            let targetStance = nextPool[Math.floor(Math.random() * nextPool.length)];
+            lastPlayedBehavior = targetStance;
+
+            setAvatarVisualStance(targetStance);
+            setTimeout(initializeCharacterBehaviorLoop, Math.random() * 5000 + 6000);
+        }
+
+        function setAvatarVisualStance(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            const flute = document.getElementById("divine-flute");
+            const avatar = document.getElementById("krishna-sitting-vector");
+
+            elL.setAttribute("d", "M42 57 Q45 55 47 57");
+            elR.setAttribute("d", "M53 57 Q55 55 58 57");
+            smile.setAttribute("d", "M45 65 Q50 69 55 65");
+            flute.style.display = "none";
+            avatar.style.transform = "scale(1)";
+
+            switch(state) {
+                case 'blink':
+                    elL.setAttribute("d", "M42 57 L47 57");
+                    elR.setAttribute("d", "M53 57 L58 57");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M43 62 Q50 73 57 62");
+                    avatar.style.transform = "scale(1.03)";
+                    break;
+                case 'playFluteMode':
+                    flute.style.display = "block";
+                    smile.setAttribute("d", "M47 65 Q50 67 53 65");
+                    break;
+            }
+        }
+
+        function triggerCharacterJoyfulReaction() {
+            setAvatarVisualStance('smile');
+            const bubble = document.getElementById("avatar-speech-node");
+            bubble.innerText = "Beautiful spiritual sound vibration, Sakha...";
+            bubble.classList.add("visible");
+            setTimeout(() => bubble.classList.remove("visible"), 2500);
+        }
+
+        function triggerCharacterJoyfulTreatmentSequence() {
+            setAvatarVisualStance('smile');
+            const bubble = document.getElementById("avatar-speech-node");
+            bubble.innerText = COMPLETION_DIVINE_SPEECH[Math.floor(Math.random() * COMPLETION_DIVINE_SPEECH.length)];
+            bubble.classList.add("visible");
+        }
+    </script>
+</body>
+</html>
