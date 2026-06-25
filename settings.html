@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Sanctuary Settings</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+            --glass-bg: rgba(7, 30, 61, 0.75);
+            --glass-border: rgba(241, 196, 15, 0.3);
+            --ui-font-size: 1rem;
+            
+            /* Theme Gradient Defs */
+            --sky-gradient: linear-gradient(180deg, #0f172a 0%, #1e1b4b 60%, #020617 100%);
+            --ambient-overlay: rgba(99, 102, 241, 0.15);
+        }
+
+        /* --- Dynamic Theme Sets --- */
+        body.theme-light { --sky-gradient: linear-gradient(180deg, #f5f6fa 0%, #dcdde1 100%); --text-light: #071e3d; --glass-bg: rgba(255,255,255,0.8); --glass-border: rgba(7, 30, 61, 0.2); }
+        body.theme-sunrise { --sky-gradient: linear-gradient(180deg, #ff9f43 0%, #feca57 60%, #ffffea 100%); --ambient-overlay: rgba(255, 159, 67, 0.15); }
+        body.theme-evening { --sky-gradient: linear-gradient(180deg, #eb3b5a 0%, #fa8231 60%, #f7d794 100%); --ambient-overlay: rgba(250, 130, 49, 0.2); }
+        body.theme-moonlight { --sky-gradient: linear-gradient(180deg, #0f172a 0%, #1e1b4b 60%, #020617 100%); --ambient-overlay: rgba(99, 102, 241, 0.15); }
+        body.theme-forest { --sky-gradient: linear-gradient(180deg, #10ac84 0%, #018351 60%, #004b23 100%); --ambient-overlay: rgba(16, 172, 132, 0.1); }
+
+        body.font-small { --ui-font-size: 0.85rem; }
+        body.font-medium { --ui-font-size: 1rem; }
+        body.font-large { --ui-font-size: 1.15rem; }
+        
+        body.high-contrast { --glass-bg: #000; --glass-border: #fff; --text-light: #fff; --gold-light: #ffff00; --gold-primary: #ffff00; }
+        body.reduce-animations * { animation: none !important; transition: none !important; }
+
+        /* --- Reset & Immersive Foundation --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow: hidden;
+            font-size: var(--ui-font-size);
+        }
+
+        /* --- Animated Environmental Backdrops --- */
+        #settings-sky-matte {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--sky-gradient);
+            z-index: 1;
+            transition: background var(--transition-speed) ease;
+        }
+
+        #scenery-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ambient-glow-filter {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+            background: var(--ambient-overlay);
+            transition: background var(--transition-speed) ease;
+        }
+
+        /* --- Main Layout Structure --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(241,196,15,0.1);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .version-badge {
+            font-family: 'Cinzel', serif;
+            background: rgba(7, 30, 61, 0.6);
+            border: 1px solid var(--glass-border);
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        /* --- Workspace Architecture Split Layout --- */
+        .workspace-grid {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        @media (max-width: 950px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Left Column Scrollable Settings Hub --- */
+        .settings-scroll-vault {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .settings-scroll-vault::-webkit-scrollbar {
+            width: 6px;
+        }
+        .settings-scroll-vault::-webkit-scrollbar-thumb {
+            background: var(--gold-primary);
+            border-radius: 3px;
+        }
+
+        /* Individual Premium Glass Cards Modules */
+        .settings-glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            transition: border-color 0.3s;
+        }
+
+        .settings-glass-card:hover {
+            border-color: rgba(241, 196, 15, 0.5);
+        }
+
+        .card-headline {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(241,196,15,0.15);
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Functional Preferences Controls Layout Formats */
+        .preference-row-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .preference-row-control:last-child {
+            border-bottom: none;
+        }
+
+        .control-label-block h5 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .control-label-block p {
+            font-size: 0.75rem;
+            color: #a4b0be;
+            margin-top: 2px;
+        }
+
+        /* Interactive Select Chips Row */
+        .interactive-chips-deck {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .setting-chip-node {
+            background: rgba(2, 11, 20, 0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #a4b0be;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .setting-chip-node:hover, .setting-chip-node.active-preference {
+            background: rgba(243, 156, 18, 0.15);
+            border-color: var(--gold-primary);
+            color: var(--gold-light);
+            font-weight: 600;
+            box-shadow: 0 0 10px rgba(241,196,15,0.15);
+        }
+
+        /* Sliders Layouts */
+        .premium-slider-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 180px;
+        }
+
+        .premium-range-slider {
+            flex-grow: 1;
+            appearance: none;
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .premium-range-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--gold-light);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--gold-glow);
+            transition: transform 0.2s;
+        }
+
+        .premium-range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Premium Toggle Switch Natively Custom styled */
+        .toggle-switch-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .toggle-switch-wrapper input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider-rail {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(2, 11, 20, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: .3s;
+            border-radius: 22px;
+        }
+
+        .toggle-slider-rail:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #a4b0be;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider-rail {
+            background-color: rgba(243, 156, 18, 0.2);
+            border-color: var(--gold-primary);
+        }
+
+        input:checked + .toggle-slider-rail:before {
+            transform: translateX(22px);
+            background-color: var(--gold-light);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        /* Input Texts boxes custom */
+        .premium-text-field {
+            background: rgba(2, 11, 20, 0.5);
+            border: 1px solid var(--glass-border);
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+            width: 180px;
+            transition: border-color 0.3s;
+        }
+
+        .premium-text-field:focus {
+            border-color: var(--gold-light);
+        }
+
+        /* --- Right Column Sidebar: Seated Avatar Rig Room --- */
+        .avatar-companion-sanctum {
+            background: rgba(4, 19, 41, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            position: relative;
+            min-height: 420px;
+        }
+
+        @media (max-width: 950px) {
+            .avatar-companion-sanctum {
+                display: none; /* Auto collapse sidebar on smaller grids viewports */
+            }
+        }
+
+        .speech-bubble {
+            background: var(--text-light);
+            color: var(--deep-blue);
+            padding: 10px 16px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            max-width: 220px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            position: absolute;
+            top: 25px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            z-index: 15;
+        }
+
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--text-light) transparent;
+        }
+
+        .speech-bubble.visible { opacity: 1; transform: translateY(0); }
+
+        .avatar-dome-wrapper {
+            height: 250px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .krishna-avatar-svg {
+            width: 130px;
+            height: 190px;
+            z-index: 3;
+            transform-origin: bottom center;
+            transition: transform 0.6s ease;
+        }
+
+        .courtyard-asana-seat {
+            position: absolute;
+            bottom: 0;
+            width: 170px;
+            height: 14px;
+            background: linear-gradient(90deg, #2c3e50 0%, #7f8c8d 50%, #2c3e50 100%);
+            border: 2px solid var(--gold-primary);
+            border-radius: 4px;
+            z-index: 2;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        /* --- Master Footer Control Action Bars --- */
+        .master-footer-actions-row {
+            width: 100%;
+            max-width: 1200px;
+            margin: 15px auto 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            .master-footer-actions-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .btn-premium {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            background: linear-gradient(135deg, #1e3799, var(--peacock-blue));
+            border: 2px solid var(--gold-primary);
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s;
+        }
+
+        .btn-premium:hover {
+            color: #020b14;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        /* --- Bottom Global Navigation Framework Deck --- */
+        .bottom-nav-deck {
+            width: 100%;
+            max-width: 850px;
+            margin: 15px auto 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            padding: 6px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #a4b0be;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            margin-bottom: 3px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-light);
+            background: rgba(255,255,255,0.04);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="settings-sky-matte"></div>
+    <canvas id="scenery-canvas"></canvas>
+    <div class="ambient-glow-filter"></div>
+
+    <div class="app-container">
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="window.history.back();">← RETURN</button>
+                <h1 class="page-title">SANCTUARY PREFERENCES</h1>
+            </div>
+            <div class="version-badge" id="app-version-lbl">v1.2.5-Build 2026</div>
+        </header>
+
+        <div class="workspace-grid">
+            
+            <main class="settings-scroll-vault">
+                
+                <section class="settings-glass-card">
+                    <h3 class="card-headline">🎨 VISUAL APPAREL & THEMES</h3>
+                    
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Sanctum Sky Theme</h5>
+                            <p>Adjust environmental ambient colors representing periods of Vrindavan day cycles.</p>
+                        </div>
+                        <div class="interactive-chips-deck" id="theme-selectors-deck">
+                            <div class="setting-chip-node" data-value="sunrise" onclick="updateActiveThemePreference('sunrise')">Sunrise</div>
+                            <div class="setting-chip-node" data-value="afternoon" onclick="updateActiveThemePreference('afternoon')">Afternoon</div>
+                            <div class="setting-chip-node" data-value="evening" onclick="updateActiveThemePreference('evening')">Evening</div>
+                            <div class="setting-chip-node" data-value="moonlight" onclick="updateActiveThemePreference('moonlight')">Moonlight</div>
+                            <div class="setting-chip-node" data-value="forest" onclick="updateActiveThemePreference('forest')">Forest</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="settings-glass-card">
+                    <h3 class="card-headline">🎵 ACOUSTIC ENVIRONMENT</h3>
+                    
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Background Bhajan Music</h5>
+                            <p>Tweak relative gain multipliers for background acoustic string melodies instruments.</p>
+                        </div>
+                        <div class="premium-slider-wrapper">
+                            <input type="range" class="premium-range-slider" id="slider-volume-music" min="0" max="100" value="70" oninput="handleSliderVolumeSync('music', this.value)">
+                            <span style="font-size: 0.75rem; font-weight: bold; width: 25px;" id="lbl-volume-music">70%</span>
+                        </div>
+                    </div>
+
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Temple Bells Resonance</h5>
+                            <p>Trigger beautiful feedback chime sound layers during sequence tasks milestones completions.</p>
+                        </div>
+                        <label class="toggle-switch-wrapper">
+                            <input type="checkbox" id="toggle-sound-bells" checked onchange="handleTogglePreferenceChange('bells', this.checked)">
+                            <span class="toggle-slider-rail"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Vrindavan Nature Ambience</h5>
+                            <p>Enable background recordings loops for singing birds and rustling Kadamba leaves leaves.</p>
+                        </div>
+                        <label class="toggle-switch-wrapper">
+                            <input type="checkbox" id="toggle-sound-nature" checked onchange="handleTogglePreferenceChange('nature', this.checked)">
+                            <span class="toggle-slider-rail"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="settings-glass-card">
+                    <h3 class="card-headline">👤 PILGRIM IDENTITY</h3>
+                    
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Companion Alias Name</h5>
+                            <p>Customize how child Krishna addresses you inside dialogue speech bubbles modules.</p>
+                        </div>
+                        <input type="text" class="premium-text-field" id="field-player-name" value="Devoted Companion" onchange="handleTextIdentityChange(this.value)">
+                    </div>
+
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Sanctuary Joining Date</h5>
+                            <p>The cosmic date calendar stamp mark when your browser profile initialized.</p>
+                        </div>
+                        <span style="font-size: 0.85rem; color: var(--gold-light); font-weight: 600;" id="lbl-join-date">June 2026</span>
+                    </div>
+                </section>
+
+                <section class="settings-glass-card">
+                    <h3 class="card-headline">👁️ ACCESSIBILITY & LAYOUTS</h3>
+                    
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Global UI Typography Scale</h5>
+                            <p>Enlarge readability sizing layouts parameters contextually across panels.</p>
+                        </div>
+                        <div class="interactive-chips-deck" id="font-selectors-deck">
+                            <div class="setting-chip-node" data-value="small" onclick="updateFontSizePreference('small')">Small</div>
+                            <div class="setting-chip-node" data-value="medium" onclick="updateFontSizePreference('medium')">Medium</div>
+                            <div class="setting-chip-node" data-value="large" onclick="updateFontSizePreference('large')">Large</div>
+                        </div>
+                    </div>
+
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Reduce Graphics Animations</h5>
+                            <p>Suspend intense background particles processing cascades loops for conservative parsing profiles.</p>
+                        </div>
+                        <label class="toggle-switch-wrapper">
+                            <input type="checkbox" id="toggle-access-reduce-anim" onchange="handleTogglePreferenceChange('reduce_anim', this.checked)">
+                            <span class="toggle-slider-rail"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>High Contrast Visual Mode</h5>
+                            <p>Force solid monochrome backgrounds structures parameters lines execution explicitly.</p>
+                        </div>
+                        <label class="toggle-switch-wrapper">
+                            <input type="checkbox" id="toggle-access-contrast" onchange="handleTogglePreferenceChange('high_contrast', this.checked)">
+                            <span class="toggle-slider-rail"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="settings-glass-card">
+                    <h3 class="card-headline">🔔 TIMELY REMINDERS</h3>
+                    
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Daily Darshan Notifications</h5>
+                            <p>Receive casual visual promptings reminders to maintain your devotion streaks logs consistency.</p>
+                        </div>
+                        <label class="toggle-switch-wrapper">
+                            <input type="checkbox" id="toggle-notif-daily" checked onchange="handleTogglePreferenceChange('notif_daily', this.checked)">
+                            <span class="toggle-slider-rail"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Vraja Festival Alerts</h5>
+                            <p>Get automatic highlighted updates notices regarding special occasions presets availability tags.</p>
+                        </div>
+                        <label class="toggle-switch-wrapper">
+                            <input type="checkbox" id="toggle-notif-fest" checked onchange="handleTogglePreferenceChange('notif_fest', this.checked)">
+                            <span class="toggle-slider-rail"></span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="settings-glass-card">
+                    <h3 class="card-headline">💾 ARCHIVE DATA MANAGEMENT</h3>
+                    
+                    <div class="preference-row-control">
+                        <div class="control-label-block">
+                            <h5>Backup Progress Snapshot</h5>
+                            <p>Compile current local milestones coordinates into an exportable portable string package.</p>
+                        </div>
+                        <button class="btn-back" style="font-size: 0.75rem;" onclick="triggerJournalBackupExport()">EXPORT Progress</button>
+                    </div>
+
+                    <div class="preference-row-control">
+                        <div class="control-label-block" style="max-width: 60%;">
+                            <h5 style="color: #ff8282;">Wipe Out Sanctum Records</h5>
+                            <p>Irreversibly delete local database sequences items milestones values logs flags from browser cache completely.</p>
+                        </div>
+                        <button class="btn-back" style="border-color: #c0392b; color: #ff8282;" onclick="triggerDestructiveFullSanctumReset()">Wipe Everything</button>
+                    </div>
+                </section>
+
+                <section class="settings-glass-card" style="background: rgba(2, 11, 20, 0.4);">
+                    <h4 class="card-headline" style="font-size: 0.9rem; border-bottom: none; margin-bottom: 0;">ℹ️ ABOUT KRISHNA SAKHA</h4>
+                    <p style="font-size: 0.8rem; color: #a4b0be; line-height: 1.5; margin-top: 8px;">
+                        Krishna Sakha is a premium, peaceful interactive devotional environment experience crafted out of deep appreciation inspired elegantly by the wonderful childhood pastimes of Child Krishna in holy Vrindavan.
+                    </p>
+                </section>
+
+            </main>
+
+            <aside class="avatar-companion-sanctum">
+                <div class="speech-bubble" id="avatar-speech-overlay">...</div>
+
+                <div class="avatar-dome-wrapper">
+                    <svg class="krishna-avatar-svg" id="standing-avatar-rig" viewBox="0 0 100 150">
+                        <circle cx="50" cy="45" r="17" fill="#1e272e"/>
+                        <circle id="rig-complexion" cx="50" cy="48" r="13" fill="#74b9ff"/> <path d="M35 36 L50 11 L65 36 Z" fill="#f1c40f" stroke="#f39c12" stroke-width="1"/>
+                        <path d="M50 11 Q60 -5 55 -12 Q44 -5 50 11" fill="#009432"/>
+                        <path id="eye-l" d="M43 47 Q45 45 47 47" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/>
+                        <path id="eye-r" d="M53 47 Q55 45 57 47" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/>
+                        <path id="krishna-smile" d="M46 54 Q50 57 54 54" fill="none" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M36 62 L64 62 L68 98 L32 98 Z" fill="#f1c40f"/>
+                        <path d="M43 62 Q50 85 57 62" fill="none" stroke="#e67e22" stroke-width="1"/>
+                        <rect id="divine-flute" x="30" y="50" width="44" height="3.5" rx="1.5" fill="#d35400" transform="rotate(-10 50 52)" style="display:none;"/>
+                    </svg>
+                    <div class="courtyard-asana-seat"></div>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="master-footer-actions-row">
+            <button class="btn-back" onclick="restoreSanctuaryPreferencesDefaults()">RESTORE DEFAULTS</button>
+            <span style="font-size: 0.75rem; color: #a4b0be; text-align: center;">Settings update automatically inside LocalStorage.</span>
+            <button class="btn-premium" onclick="window.history.back();">SAVE & COMPACT</button>
+        </footer>
+
+        <footer class="bottom-nav-deck">
+            <a class="nav-item" onclick="location.href='index.html';"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+            <a class="nav-item" onclick="location.href='play.html';"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>Play</a>
+            <a class="nav-item" onclick="location.href='bhoga.html';"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Bhoga</a>
+            <a class="nav-item" onclick="location.href='arati.html';"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H7"/></svg>Arati</a>
+            <a class="nav-item" onclick="location.href='dress.html';"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Dress</a>
+            <a class="nav-item" onclick="location.href='stories.html';"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Stories</a>
+            <a class="nav-item" onclick="location.href='profile.html';"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>Profile</a>
+            <a class="nav-item active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+        </footer>
+    </div>
+
+    <script>
+        /* ================= REGISTRY DECLARATIONS & CONSTANTS CONFIGS ================= */
+        const DIVINE_COMFORT_PROMPTS = [
+            "Make yourself completely comfortable, Sakha.",
+            "Choose whatever setup variations feel best for your contemplation.",
+            "I am always happy to view your custom configurations layout here."
+        ];
+
+        /* --- Ambient Scenery Dynamic Canvas Render Processing Engine --- */
+        const canvas = document.getElementById('scenery-canvas');
+        const ctx = canvas.getContext('2d');
+        let scenicFloatingParticlesArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class EveningSanctuaryParticle {
+            constructor(type) {
+                this.type = type; // 'petal', 'firefly'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 1.2;
+                this.speedY = this.type === 'petal' ? (Math.random() * 0.4 + 0.15) : -(Math.random() * 0.3 + 0.1);
+                this.speedX = Math.random() * 0.6 - 0.3;
+                this.alpha = Math.random() * 0.5 + 0.2;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30 || this.y > canvas.height + 30 || this.x < -30 || this.x > canvas.width + 30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                if(this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#ff7675"; // Standard rose floral dropping petal coloring structure lines
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size * 1.4, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = "rgba(241, 196, 15, 0.65)"; // Radiant glowing firefly dots sparks
+                    ctx.shadowBlur = 6;
+                    ctx.shadowColor = "#f1c40f";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Populate Initial Scenery Environmental Particles Stack Array
+        for(let i=0; i<12; i++) scenicFloatingParticlesArray.push(new EveningSanctuaryParticle('petal'));
+        for(let i=12; i<35; i++) scenicFloatingParticlesArray.push(new EveningSanctuaryParticle('firefly'));
+
+        function runSceneryGraphicsEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for(let element of scenicFloatingParticlesArray) {
+                element.update();
+                element.draw();
+            }
+            requestAnimationFrame(runSceneryGraphicsEngine);
+        }
+        runSceneryGraphicsEngine();
+
+        /* --- Life-cycle Initializations & Storage Operations --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            loadPreferencesFromLocalStorage();
+            triggerCharacterSpeechSequence();
+            initializeCharacterBehaviorLoop();
+        });
+
+        function loadPreferencesFromLocalStorage() {
+            // Theme Synchronizations Fallbacks
+            let activeTheme = localStorage.getItem("sanctuary_pref_theme") || "moonlight";
+            updateActiveThemePreference(activeTheme, true);
+
+            // Audio Vol Ranges Controls Synchronizations
+            let musicVol = localStorage.getItem("sanctuary_vol_music") || "70";
+            document.getElementById("slider-volume-music").value = musicVol;
+            document.getElementById("lbl-volume-music").innerText = `${musicVol}%`;
+
+            // Checkbox Toggles Switch Elements states syncs
+            let bellsActive = localStorage.getItem("sanctuary_sound_bells") !== "false";
+            document.getElementById("toggle-sound-bells").checked = bellsActive;
+
+            let natureActive = localStorage.getItem("sanctuary_sound_nature") !== "false";
+            document.getElementById("toggle-sound-nature").checked = natureActive;
+
+            let dailyNotif = localStorage.getItem("sanctuary_notif_daily") !== "false";
+            document.getElementById("toggle-notif-daily").checked = dailyNotif;
+
+            let festNotif = localStorage.getItem("sanctuary_notif_fest") !== "false";
+            document.getElementById("toggle-notif-fest").checked = festNotif;
+
+            // Identity fields load
+            let nameAlias = localStorage.getItem("profile_player_name") || "Devoted Companion";
+            document.getElementById("field-player-name").value = nameAlias;
+
+            let joinDate = localStorage.getItem("profile_join_date") || "June 2026";
+            document.getElementById("lbl-join-date").innerText = joinDate;
+
+            // Accessibility profiles states syncs
+            let uiFontScale = localStorage.getItem("sanctuary_font_scale") || "medium";
+            updateFontSizePreference(uiFontScale, true);
+
+            let reduceAnim = localStorage.getItem("sanctuary_reduce_anim") === "true";
+            document.getElementById("toggle-access-reduce-anim").checked = reduceAnim;
+            if(reduceAnim) document.body.classList.add("reduce-animations");
+
+            let contrastMode = localStorage.getItem("sanctuary_high_contrast") === "true";
+            document.getElementById("toggle-access-contrast").checked = contrastMode;
+            if(contrastMode) document.body.classList.add("high-contrast");
+        }
+
+        /* --- Preference Mutators Modifications Control Engines --- */
+        function updateActiveThemePreference(themeKey, suppressFeedback = false) {
+            // Un-highlight alternative selection parameters nodes chips rows elements
+            document.querySelectorAll("#theme-selectors-deck .setting-chip-node").forEach(chip => {
+                chip.classList.remove("active-preference");
+                if(chip.dataset.value === themeKey) chip.classList.add("active-preference");
+            });
+
+            // Strip styling classes before applying fresh tokens targets rules tags parameters directly
+            document.body.classList.remove("theme-light", "theme-sunrise", "theme-evening", "theme-moonlight", "theme-forest");
+            document.body.classList.add(`theme-${themeKey}`);
+
+            localStorage.setItem("sanctuary_pref_theme", themeKey);
+            if(!suppressFeedback) triggerCharacterLookDirectionReaction();
+        }
+
+        function updateFontSizePreference(fontSizeKey, suppressFeedback = false) {
+            document.querySelectorAll("#font-selectors-deck .setting-chip-node").forEach(chip => {
+                chip.classList.remove("active-preference");
+                if(chip.dataset.value === fontSizeKey) chip.classList.add("active-preference");
+            });
+
+            document.body.classList.remove("font-small", "font-medium", "font-large");
+            document.body.classList.add(`font-${fontSizeKey}`);
+
+            localStorage.setItem("sanctuary_font_scale", fontSizeKey);
+            if(!suppressFeedback) triggerCharacterLookDirectionReaction();
+        }
+
+        function handleSliderVolumeSync(controlKey, val) {
+            document.getElementById(`lbl-volume-${controlKey}`).innerText = `${val}%`;
+            localStorage.setItem(`sanctuary_vol_${controlKey}`, val.toString());
+        }
+
+        function handleTogglePreferenceChange(configKey, checkedState) {
+            switch(configKey) {
+                case 'bells': localStorage.setItem("sanctuary_sound_bells", checkedState.toString()); break;
+                case 'nature': localStorage.setItem("sanctuary_sound_nature", checkedState.toString()); break;
+                case 'notif_daily': localStorage.setItem("sanctuary_notif_daily", checkedState.toString()); break;
+                case 'notif_fest': localStorage.setItem("sanctuary_notif_fest", checkedState.toString()); break;
+                case 'reduce_anim':
+                    localStorage.setItem("sanctuary_reduce_anim", checkedState.toString());
+                    document.body.classList.toggle("reduce-animations", checkedState);
+                    break;
+                case 'high_contrast':
+                    localStorage.setItem("sanctuary_high_contrast", checkedState.toString());
+                    document.body.classList.toggle("high-contrast", checkedState);
+                    break;
+            }
+            triggerCharacterLookDirectionReaction();
+        }
+
+        function handleTextIdentityChange(val) {
+            let sanitized = val.trim();
+            if(sanitized !== "") {
+                localStorage.setItem("profile_player_name", sanitized);
+                triggerCharacterLookDirectionReaction();
+            }
+        }
+
+        /* --- Progress Utilities Archives Control Zone Scripts --- */
+        function triggerJournalBackupExport() {
+            let backup = {};
+            for(let i=0; i<localStorage.length; i++) {
+                let key = localStorage.key(i);
+                backup[key] = localStorage.getItem(key);
+            }
+            let dataUriStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup));
+            let anchorNodeElement = document.createElement('a');
+            anchorNodeElement.setAttribute("href", dataUriStr);
+            anchorNodeElement.setAttribute("download", "krishna_sakha_sanctuary_backup.json");
+            document.body.appendChild(anchorNodeElement);
+            anchorNodeElement.click();
+            anchorNodeElement.remove();
+        }
+
+        function triggerDestructiveFullSanctumReset() {
+            let confirmWipe = confirm("Are you completely certain you desire to clear out your whole sanctuary record variables database configuration preferences parameters? This wipes out your logs entirely.");
+            if(confirmWipe) {
+                localStorage.clear();
+                alert("Preferences cleared context parameters successfully. Reloading...");
+                location.reload();
+            }
+        }
+
+        function restoreSanctuaryPreferencesDefaults() {
+            let confirmDefault = confirm("Restore configurations back to baseline sanctuary parameters fallbacks parameters?");
+            if(confirmDefault) {
+                localStorage.removeItem("sanctuary_pref_theme");
+                localStorage.removeItem("sanctuary_vol_music");
+                localStorage.removeItem("sanctuary_sound_bells");
+                localStorage.removeItem("sanctuary_sound_nature");
+                localStorage.removeItem("sanctuary_font_scale");
+                localStorage.removeItem("sanctuary_reduce_anim");
+                localStorage.removeItem("sanctuary_high_contrast");
+                alert("Defaults restored.");
+                loadPreferencesFromLocalStorage();
+            }
+        }
+
+        /* --- Seated Avatar Autonomous Character Animation State Machinery Loops --- */
+        const aiBehaviorsPoolList = ['smile', 'blink', 'playFluteMode', 'meditatePosture'];
+        let lastPlayedBehavior = "";
+
+        function initializeCharacterBehaviorLoop() {
+            let nextPool = aiBehaviorsPoolList.filter(b => b !== lastPlayedBehavior);
+            let targetStance = nextPool[Math.floor(Math.random() * nextPool.length)];
+            lastPlayedBehavior = targetStance;
+
+            setAvatarVisualStance(targetStance);
+            setTimeout(initializeCharacterBehaviorLoop, Math.random() * 5000 + 6000);
+        }
+
+        function setAvatarVisualStance(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            const flute = document.getElementById("divine-flute");
+            const avatar = document.getElementById("standing-avatar-rig");
+
+            elL.setAttribute("d", "M43 47 Q45 45 47 47");
+            elR.setAttribute("d", "M53 47 Q55 45 57 47");
+            smile.setAttribute("d", "M46 54 Q50 57 54 54");
+            flute.style.display = "none";
+            avatar.style.transform = "scale(1)";
+
+            switch(state) {
+                case 'blink':
+                    elL.setAttribute("d", "M43 47 L47 47");
+                    elR.setAttribute("d", "M53 47 L57 47");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M44 52 Q50 61 56 52");
+                    avatar.style.transform = "scale(1.02)";
+                    break;
+                case 'playFluteMode':
+                    flute.style.display = "block";
+                    smile.setAttribute("d", "M47 47 Q50 49 53 47");
+                    break;
+            }
+        }
+
+        function triggerCharacterSpeechSequence() {
+            const overlay = document.getElementById("avatar-speech-overlay");
+            overlay.innerText = DIVINE_COMFORT_PROMPTS[Math.floor(Math.random() * DIVINE_COMFORT_PROMPTS.length)];
+            overlay.classList.add("visible");
+            setTimeout(() => overlay.classList.remove("visible"), 4500);
+        }
+
+        function triggerCharacterLookDirectionReaction() {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            
+            // Cast glance leftwards towards configuration cards columns
+            elL.setAttribute("d", "M41 47 Q43 45 45 47");
+            elR.setAttribute("d", "M51 47 Q53 45 55 47");
+            smile.setAttribute("d", "M44 52 Q50 60 56 52");
+
+            const overlay = document.getElementById("avatar-speech-overlay");
+            overlay.innerText = "Splendid arrangement selection, Sakha!";
+            overlay.classList.add("visible");
+            setTimeout(() => overlay.classList.remove("visible"), 2200);
+        }
+    </script>
+</body>
+</html>
