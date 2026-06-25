@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Magical Stories</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+            --glass-bg: rgba(7, 30, 61, 0.75);
+            --glass-border: rgba(241, 196, 15, 0.3);
+            
+            /* Reading Panel Custom Modifiers */
+            --story-font-size: 1rem;
+            --story-bg: rgba(7, 30, 61, 0.95);
+            --story-txt: #f5f6fa;
+        }
+
+        /* --- Theme Styling Sets --- */
+        .theme-light { --story-bg: #f5f6fa; --story-txt: #071e3d; }
+        .theme-dark { --story-bg: #020b14; --story-txt: #f5f6fa; }
+        .theme-sepia { --story-bg: #f4eae1; --story-txt: #5c3d2e; }
+
+        .font-small { --story-font-size: 0.9rem; }
+        .font-medium { --story-font-size: 1.1rem; }
+        .font-large { --story-font-size: 1.3rem; }
+
+        /* --- Reset & Immersive Foundation --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Sunset Landscape Atmosphere --- */
+        #sunset-sky-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .sunset-bloom-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(235, 94, 40, 0.2) 0%, rgba(243, 156, 18, 0.1) 50%, rgba(2, 11, 20, 0.5) 100%);
+        }
+
+        /* --- Main Layout Frame Container --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 15px 90px 15px;
+        }
+
+        /* --- Top Navigation Architecture --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 20px;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(241,196,15,0.1);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        /* Search Sub-component Box */
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(2, 11, 20, 0.5);
+            border: 1px solid var(--glass-border);
+            padding: 10px 16px 10px 36px;
+            border-radius: 20px;
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 12px rgba(241,196,15,0.2);
+            background: rgba(2, 11, 20, 0.8);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold-light);
+            pointer-events: none;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* --- Split Structural Library Design --- */
+        .library-layout {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        @media (max-width: 950px) {
+            .library-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Left Compartment: Vrindavan Tree Scene with Sitting Avatar --- */
+        .tree-sanctum {
+            background: rgba(4, 19, 41, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 420px;
+            justify-content: space-between;
+        }
+
+        .speech-bubble {
+            background: var(--text-light);
+            color: var(--deep-blue);
+            padding: 10px 16px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            max-width: 220px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            position: absolute;
+            top: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            z-index: 10;
+        }
+
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--text-light) transparent;
+        }
+
+        .speech-bubble.visible { opacity: 1; transform: translateY(0); }
+
+        .avatar-under-tree-dome {
+            height: 240px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: auto;
+        }
+
+        .ancient-tree-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            width: 80px;
+            height: 220px;
+            background: linear-gradient(90deg, #3d2314 0%, #5c3826 100%);
+            border-radius: 0 40px 0 0;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .krishna-sitting-vector {
+            width: 130px;
+            height: 180px;
+            z-index: 3;
+            transform-origin: bottom center;
+            transition: transform 0.6s ease;
+        }
+
+        /* Achievements Badges Panel */
+        .badges-tray {
+            width: 100%;
+            border-top: 1px solid rgba(241,196,15,0.15);
+            padding-top: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge-node {
+            width: 36px;
+            height: 36px;
+            background: rgba(2, 11, 20, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            opacity: 0.3;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .badge-node.unlocked {
+            opacity: 1;
+            border-color: var(--gold-primary);
+            background: rgba(243, 156, 18, 0.2);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .badge-node:hover::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 42px;
+            background: var(--deep-blue);
+            color: var(--text-light);
+            font-size: 0.65rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            border: 1px solid var(--gold-primary);
+            z-index: 100;
+        }
+
+        /* --- Right Compartment: Main Stories Library Feed --- */
+        .feed-sanctuary {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Hero Daily Card module */
+        .featured-hero-card {
+            background: linear-gradient(135deg, rgba(10, 61, 98, 0.85) 0%, rgba(7, 30, 61, 0.95) 100%);
+            border: 2px solid var(--gold-primary);
+            border-radius: 12px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 25px;
+            align-items: center;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (max-width: 600px) {
+            .featured-hero-card { grid-template-columns: 1fr; text-align: center; justify-items: center;}
+        }
+
+        .featured-banner-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--gold-primary);
+            color: #020b14;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 12px;
+            letter-spacing: 1px;
+        }
+
+        .hero-illustration-slot {
+            width: 130px;
+            height: 130px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .hero-desc {
+            font-size: 0.9rem;
+            color: #dcdde1;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        /* Filter Chips Module Horizontal Categories Row */
+        .categories-chips-row {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .category-chip {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: #a4b0be;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .category-chip:hover, .category-chip.active-chip {
+            color: var(--gold-light);
+            border-color: var(--gold-light);
+            background: rgba(10, 61, 98, 0.6);
+            box-shadow: 0 0 10px rgba(241,196,15,0.15);
+        }
+
+        /* General Stories Feed Layout Grid */
+        .stories-feed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .story-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+        }
+
+        .story-card:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 8px 25px rgba(241, 196, 15, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .story-card-top {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .story-mini-thumb {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .story-card-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 1rem;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+
+        .story-meta-row {
+            display: flex;
+            gap: 8px;
+            font-size: 0.68rem;
+            color: #a4b0be;
+            text-transform: uppercase;
+        }
+
+        .story-card-summary {
+            font-size: 0.8rem;
+            color: #dcdde1;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .story-card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
+        }
+
+        .btn-text-action {
+            background: transparent;
+            border: none;
+            color: var(--gold-primary);
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .btn-text-action:hover { color: var(--gold-light); }
+
+        .btn-fav-toggle {
+            background: transparent;
+            border: none;
+            color: #a4b0be;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .btn-fav-toggle.is-fav { color: #ff7675; }
+
+        /* --- Full Screen Magical Reading Theatre Overlay Module --- */
+        .reading-theatre-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--story-bg);
+            color: var(--story-txt);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .reading-container {
+            width: 100%;
+            max-width: 750px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .reading-header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+            padding-bottom: 12px;
+        }
+
+        .reading-title-banner {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .reading-preferences-panel {
+            display: flex;
+            gap: 15px;
+            background: rgba(0,0,0,0.05);
+            padding: 8px 16px;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pref-btn {
+            background: transparent;
+            border: 1px solid rgba(251, 197, 49, 0.3);
+            color: inherit;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .text-body-pane {
+            font-size: var(--story-font-size);
+            line-height: 1.7;
+            text-align: justify;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 300px;
+        }
+
+        .reading-footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(241,196,15,0.2);
+            padding-top: 15px;
+        }
+
+        .progress-track-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .progress-fill-node {
+            height: 100%;
+            background: var(--gold-primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* --- Bottom Global Navigation Framework --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 800px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            padding: 6px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #a4b0be;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            margin-bottom: 3px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-light);
+            background: rgba(255,255,255,0.04);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="sunset-sky-canvas"></canvas>
+    <div class="sunset-bloom-overlay"></div>
+
+    <div class="app-container">
+        
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="window.history.back();">← LEAVE</button>
+                <h1 class="page-title">STORIES</h1>
+            </div>
+            
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="library-search-node" placeholder="Search by name, festival, character..." oninput="handleSearchExecution()">
+            </div>
+
+            <div class="nav-right">
+                <button class="btn-back" onclick="filterByBookmarkMode()">🔖 BOOKMARKS</button>
+            </div>
+        </header>
+
+        <div class="library-layout">
+            
+            <aside class="tree-sanctum">
+                <div class="speech-bubble" id="avatar-talk-bubble">...</div>
+                
+                <div class="avatar-under-tree-dome">
+                    <div class="ancient-tree-trunk"></div>
+                    <svg class="krishna-sitting-vector" id="sitting-krishna-avatar" viewBox="0 0 100 150">
+                        <circle cx="50" cy="55" r="18" fill="#1e272e"/>
+                        <circle cx="50" cy="58" r="14" fill="#74b9ff"/> <path d="M36 46 L50 20 L64 46 Z" fill="#f1c40f"/>
+                        <path d="M50 20 Q62 5 56 -5 Q46 5 50 20" fill="#009432"/>
+                        <path id="eye-l" d="M42 56 Q45 54 47 56" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="eye-r" d="M53 56 Q55 54 58 56" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="krishna-smile" d="M45 64 Q50 68 55 64" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+                        <path d="M25 110 Q50 135 75 110 Z" fill="#f1c40f"/>
+                        <rect x="36" y="75" width="28" height="10" rx="2" fill="#f5cd79" stroke="#e67e22"/>
+                    </svg>
+                </div>
+
+                <div class="badges-tray" id="badges-tray-node">
+                    <div class="badge-node" id="badge-first" data-title="First pastime read">🌸</div>
+                    <div class="badge-node" id="badge-ten" data-title="10 Stories completed">📜</div>
+                    <div class="badge-node" id="badge-fav" data-title="Devoted Bookmarker">❤️</div>
+                </div>
+            </aside>
+
+            <main class="feed-sanctuary">
+                
+                <section class="featured-hero-card" id="hero-card-module">
+                    <span class="featured-banner-tag">PASTIME OF THE DAY</span>
+                    <div class="hero-illustration-slot">
+                        <svg width="60" height="60" viewBox="0 0 64 64"><path d="M32 12 Q48 24 32 48 Q16 24 32 12" fill="#f1c40f"/><circle cx="32" cy="24" r="4" fill="#0652dd"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="hero-title" id="hero-title-lbl">Damodara Lila</h2>
+                        <p class="hero-desc" id="hero-desc-lbl">Discover how mother Yasoda bound the infinite Supreme Child with simple ropes woven out of pure pure maternal love.</p>
+                        <button class="btn-back" style="background: var(--gold-primary); color:#020b14; font-weight: bold;" onclick="openFeaturedHeroStory()">START READING</button>
+                    </div>
+                </section>
+
+                <nav class="categories-chips-row" id="categories-scroller-box">
+                    </nav>
+
+                <section class="stories-feed-grid" id="main-library-grid">
+                    </section>
+            </main>
+        </div>
+
+        <footer class="bottom-nav">
+            <a class="nav-item" onclick="window.history.back();"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+            <a class="nav-item" onclick="location.href='play.html';"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>Play</a>
+            <a class="nav-item" onclick="location.href='bhoga.html';"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Bhoga</a>
+            <a class="nav-item" onclick="location.href='arati.html';"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H7"/></svg>Arati</a>
+            <a class="nav-item" onclick="location.href='dress.html';"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Dress</a>
+            <a class="nav-item active"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Stories</a>
+        </footer>
+    </div>
+
+    <div class="reading-theatre-overlay" id="reading-theatre-modal">
+        <div class="reading-container">
+            <header class="reading-header-controls">
+                <button class="btn-back" onclick="closeReadingTheatreOverlay()">✕ EXIT DARSHAN</button>
+                <div class="reading-preferences-panel">
+                    <button class="pref-btn" onclick="applyReadingTheme('light')">Light</button>
+                    <button class="pref-btn" onclick="applyReadingTheme('dark')">Dark</button>
+                    <button class="pref-btn" onclick="applyReadingTheme('sepia')">Sepia</button>
+                    <button class="pref-btn" style="font-weight: bold;" onclick="toggleReadingFontSize()">A±</button>
+                </div>
+            </header>
+
+            <h2 class="reading-title-banner" id="theatre-story-title">Damodara Lila</h2>
+            <div class="progress-track-bar"><div class="progress-fill-node" id="reading-progress-node"></div></div>
+            
+            <article class="text-body-pane" id="theatre-story-body-pane">
+                ...
+            </article>
+
+            <footer class="reading-footer-nav">
+                <button class="btn-back" id="btn-prev-story" onclick="navigateActiveStoryPage(-1)">← PREVIOUS</button>
+                <button class="btn-back" id="btn-bookmark-toggle" onclick="toggleCurrentStoryBookmark()">🔖 BOOKMARK</button>
+                <button class="btn-back" id="btn-next-story" onclick="navigateActiveStoryPage(1)">NEXT PASTIME →</button>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        /* ================= STORIES REPOSITORY MASTER INVENTORY MATRIX DATA ================= */
+        const REPOSITORY_PASTIMES = [
+            { id: "damodara", title: "Damodara Lila", category: "Mother Yasoda", summary: "Mother Yasoda attempts to tie little Krishna to a wooden grinding mortar with ropes of absolute affection.", time: "4 Min", level: "Easy", content: "Little Krishna had broken the butter pots of the Gopis in a playful mood. To teach Him a gentle lesson, Mother Yasoda gathered ropes to tie Him to a wooden grinding mortar. However, a strange miracle transpired—every time she pieced ropes together, the composite strand fell exactly two fingers short of wrapping around His waist! One finger represented the devotee's tireless execution of intense spiritual efforts, and the second represented the Lord's causeless descending Grace. Seeing His mother exhausted and sweating out of absolute love, the infinite Lord bounded Himself beautifully to the mortar, illustrating that He can only be conquered by pure, unalloyed love.", keywords: ["pot", "mortar", "yasoda", "butter"] },
+            { id: "kaliya", title: "Subduing Kaliya", category: "Miracles", summary: "Young Krishna dances atop the hoods of the venomous serpent Kaliya to cleanse the sacred Yamuna river.", time: "5 Min", level: "Medium", content: "The giant multi-hooded serpent Kaliya had made his dwelling in a deep pool of the Yamuna River, filling the entire atmosphere with deadly black fumes that poisoned birds flying overhead. Young Krishna leaped fearlessly from a Kadamba tree directly into the toxic, turbulent waters. As the serpent wrapped around His delicate body, Krishna expanded His weight, forcing Kaliya to release Him. He then sprang gracefully onto the massive, diamond-crested hoods of the serpent and began executing a cosmic, rhythmic dance. The impact of His steps neutralized the venomous ego of the great serpent. Recognizing the divine master, Kaliya's wives offered prayers for mercy, and Krishna instructed the serpent to migrate peacefully to the ocean, restoring the Yamuna to crystalline purity.", keywords: ["serpent", "snake", "yamuna", "dance"] },
+            { id: "govardhana", title: "Lifting Govardhana", category: "Festivals", summary: "Krishna lifts the majestic Govardhana hill on His tiny little finger to shield Vraja from thunderous torrential storms.", time: "6 Min", level: "Easy", content: "When the cowherd men of Vrindavan prepared an elaborate annual sacrifice for Indra, the god of rain, young Krishna advised them to direct their worship and gratitude to the Govardhana Hill instead, as it sustained the fields and cows. Infuriated by this shift, Indra unleashed devastating, apocalyptic rainstorms across the valley. To shelter the terrified residents, fields, and animals, seven-year-old Krishna casually approached Govardhana Hill and lifted its entire mass with His left hand's little finger, holding it aloft like an umbrella! The residents gathered underneath this grand stone canopy for seven consecutive days and nights without experiencing hunger or fatigue. Realizing His supreme status, Indra halted the storms and bowed down in absolute surrender.", keywords: ["hill", "mountain", "indra", "rain"] },
+            { id: "makhan_chor", title: "The Butter Thief", category: "Bal Krishna", summary: "Delightful stories of Krishna forming clever monkey alliances to pilfer hanging pots of fresh curd.", time: "3 Min", level: "Easy", content: "To protect their freshly churned milk products from the mischievous hands of Krishna, the Gopis began suspending their clay butter pots high from rafters in dark rooms. Undeterred, little Krishna formulated strategic alliances with local monkeys and cowherd friends, constructing human pyramids to reach the highest perches. If the curd was too sour, He would generously feed it to His monkey companions. When confronted by a Gopi, Krishna would innocent reply that He was merely checking if the quality was safe for consumption, or feeding the monkeys out of deep cosmic compassion. His structural thievery stole not just butter, but the absolute hearts of every resident in Vraja.", keywords: ["butter", "monkey", "pyramid", "gopi"] }
+        ];
+
+        const CATEGORY_TAGS = ["All", "Bal Krishna", "Mother Yasoda", "Miracles", "Festivals", "Bookmarks"];
+        const DYNAMIC_SPEECH_LINES = [
+            "Would you like to hear another sweet pastime story, Sakha?",
+            "This pastime contains timeless, eternal secrets of pure love.",
+            "Let's continue reading together beneath the tree shade."
+        ];
+
+        /* --- Local State Trackers variables definitions --- */
+        let activeCategoryFilter = "All";
+        let activeStoryIndexInView = 0;
+        let readingPreferences = { theme: "dark", size: "medium" };
+        let bookmarkedStoriesList = JSON.parse(localStorage.getItem("story_bookmarks") || "[]");
+        let favoriteStoriesList = JSON.parse(localStorage.getItem("story_favorites") || "[]");
+
+        /* --- Sunset Ambience Graphics Canvas Render Engine --- */
+        const canvas = document.getElementById('sunset-sky-canvas');
+        const ctx = canvas.getContext('2d');
+        let environmentalParticlesArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class SunsetParticle {
+            constructor(type) {
+                this.type = type; // 'petal', 'sparkle'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1.5;
+                this.speedY = this.type === 'petal' ? (Math.random() * 0.6 + 0.2) : -(Math.random() * 0.3 + 0.1);
+                this.speedX = Math.random() * 0.6 - 0.3;
+                this.alpha = Math.random() * 0.5 + 0.2;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30 || this.y > canvas.height + 30 || this.x < -30 || this.x > canvas.width + 30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                if (this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#e15f41"; // Warm sunset petal tone
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size*1.4, 0, 0, Math.PI*2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = "#ffb8b8";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size*0.5, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Initialize particles block array structures
+        for(let i=0; i<15; i++) environmentalParticlesArray.push(new SunsetParticle('petal'));
+        for(let i=15; i<35; i++) environmentalParticlesArray.push(new SunsetParticle('sparkle'));
+
+        function runSunsetSimulationEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            skyGrad.addColorStop(0, '#1e272e');
+            skyGrad.addColorStop(0.4, '#3d2314');
+            skyGrad.addColorStop(1, '#020b14');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let p of environmentalParticlesArray) {
+                p.update();
+                p.draw();
+            }
+            requestAnimationFrame(runSunsetSimulationEngine);
+        }
+        runSunsetSimulationEngine();
+
+        /* --- Life-cycle Initializations and Storage Syncing --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            syncPreferencesFromLocalStorage();
+            renderCategoriesChipsBar();
+            renderStoriesLibraryFeed();
+            initializeCharacterBehaviorLoop();
+            evaluateAchievementsBadgesUnlockState();
+        });
+
+        function syncPreferencesFromLocalStorage() {
+            let theme = localStorage.getItem("story_pref_theme") || "dark";
+            let size = localStorage.getItem("story_pref_size") || "medium";
+            readingPreferences = { theme, size };
+            
+            applyReadingTheme(theme);
+            document.getElementById("reading-theatre-modal").className = `reading-theatre-overlay theme-${theme} font-${size}`;
+        }
+
+        function renderCategoriesChipsBar() {
+            const container = document.getElementById("categories-scroller-box");
+            container.innerHTML = "";
+            CATEGORY_TAGS.forEach(tag => {
+                let chip = document.createElement("div");
+                chip.className = `category-chip ${tag === activeCategoryFilter ? 'active-chip' : ''}`;
+                chip.innerText = tag;
+                chip.onclick = () => {
+                    activeCategoryFilter = tag;
+                    document.querySelectorAll('.category-chip').forEach(el => el.classList.remove('active-chip'));
+                    chip.classList.add('active-chip');
+                    renderStoriesLibraryFeed();
+                };
+                container.appendChild(chip);
+            });
+        }
+
+        function renderStoriesLibraryFeed(filteredSet = null) {
+            const grid = document.getElementById("main-library-grid");
+            grid.innerHTML = "";
+            
+            let dataset = filteredSet || REPOSITORY_PASTIMES;
+
+            if (activeCategoryFilter === "Bookmarks") {
+                dataset = REPOSITORY_PASTIMES.filter(p => bookmarkedStoriesList.includes(p.id));
+            } else if (activeCategoryFilter !== "All" && !filteredSet) {
+                dataset = REPOSITORY_PASTIMES.filter(p => p.category === activeCategoryFilter);
+            }
+
+            if(dataset.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#a4b0be; font-style:italic;">No pastimes match the selection right now. Expand your search or bookmarks...</div>`;
+                return;
+            }
+
+            dataset.forEach(story => {
+                let isBookmarked = bookmarkedStoriesList.includes(story.id);
+                let isFav = favoriteStoriesList.includes(story.id);
+
+                let card = document.createElement("div");
+                card.className = "story-card";
+                card.innerHTML = `
+                    <div>
+                        <div class="story-card-top">
+                            <div class="story-mini-thumb">📜</div>
+                            <div>
+                                <h3 class="story-card-title">${story.title}</h3>
+                                <div class="story-meta-row"><span>${story.time}</span> • <span style="color:var(--gold-primary);">${story.level}</span></div>
+                            </div>
+                        </div>
+                        <p class="story-card-summary">${story.summary}</p>
+                    </div>
+                    <div class="story-card-actions">
+                        <button class="btn-text-action" onclick="openStoryReadingTheatre('${story.id}')">DARSHAN PASTIME →</button>
+                        <button class="btn-fav-toggle ${isFav ? 'is-fav' : ''}" onclick="toggleFavoriteStory('${story.id}', this)">❤️</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /* --- Live Search Filters Engine --- */
+        function handleSearchExecution() {
+            const value = document.getElementById("library-search-node").value.toLowerCase().trim();
+            if (value === "") {
+                renderStoriesLibraryFeed();
+                return;
+            }
+
+            let results = REPOSITORY_PASTIMES.filter(story => {
+                return story.title.toLowerCase().includes(value) || 
+                       story.summary.toLowerCase().includes(value) ||
+                       story.keywords.some(k => k.toLowerCase().includes(value));
+            });
+
+            renderStoriesLibraryFeed(results);
+        }
+
+        function filterByBookmarkMode() {
+            activeCategoryFilter = "Bookmarks";
+            renderCategoriesChipsBar();
+            renderStoriesLibraryFeed();
+        }
+
+        /* --- Theatre Immersive Reading Scripting Matrix Engines --- */
+        function openStoryReadingTheatre(storyId) {
+            const index = REPOSITORY_PASTIMES.findIndex(p => p.id === storyId);
+            if (index === -1) return;
+
+            activeStoryIndexInView = index;
+            const story = REPOSITORY_PASTIMES[index];
+
+            document.getElementById("theatre-story-title").innerText = story.title;
+            document.getElementById("theatre-story-body-pane").innerText = story.content;
+            
+            // Build Reading Progress Fill Node
+            document.getElementById("reading-progress-node").style.width = `${((index + 1) / REPOSITORY_PASTIMES.length) * 100}%`;
+
+            // Adjust navigation buttons visibility states safely
+            document.getElementById("btn-prev-story").disabled = index === 0;
+            document.getElementById("btn-next-story").disabled = index === REPOSITORY_PASTIMES.length - 1;
+
+            const bmkBtn = document.getElementById("btn-bookmark-toggle");
+            bmkBtn.innerText = bookmarkedStoriesList.includes(story.id) ? "🔖 BOOKMARKED" : "🔖 BOOKMARK";
+
+            document.getElementById("reading-theatre-modal").style.display = "flex";
+
+            // Track into Recently Read local storage structure lists context safely
+            let recent = JSON.parse(localStorage.getItem("story_recent_read") || "[]");
+            if (!recent.includes(storyId)) recent.push(storyId);
+            localStorage.setItem("story_recent_read", JSON.stringify(recent));
+            
+            evaluateAchievementsBadgesUnlockState();
+            triggerCharacterJoyfulReaction();
+        }
+
+        function closeReadingTheatreOverlay() {
+            document.getElementById("reading-theatre-modal").style.display = "none";
+            renderStoriesLibraryFeed(); // Synchronize baseline favorited adjustments frames
+        }
+
+        function navigateActiveStoryPage(direction) {
+            let targetIndex = activeStoryIndexInView + direction;
+            if (targetIndex >= 0 && targetIndex < REPOSITORY_PASTIMES.length) {
+                openStoryReadingTheatre(REPOSITORY_PASTIMES[targetIndex].id);
+            }
+        }
+
+        /* --- Custom Preferences Management Scripts --- */
+        function applyReadingTheme(themeKey) {
+            readingPreferences.theme = themeKey;
+            localStorage.setItem("story_pref_theme", themeKey);
+            const modal = document.getElementById("reading-theatre-modal");
+            modal.className = `reading-theatre-overlay theme-${themeKey} font-${readingPreferences.size}`;
+        }
+
+        function toggleReadingFontSize() {
+            const sizes = ['small', 'medium', 'large'];
+            let currentIdx = sizes.indexOf(readingPreferences.size);
+            let nextIdx = (currentIdx + 1) % sizes.length;
+            readingPreferences.size = sizes[nextIdx];
+            localStorage.setItem("story_pref_size", readingPreferences.size);
+
+            const modal = document.getElementById("reading-theatre-modal");
+            modal.className = `reading-theatre-overlay theme-${readingPreferences.theme} font-${readingPreferences.size}`;
+        }
+
+        /* --- Bookmarks and Favorites Management Matrices --- */
+        function toggleCurrentStoryBookmark() {
+            const story = REPOSITORY_PASTIMES[activeStoryIndexInView];
+            if (bookmarkedStoriesList.includes(story.id)) {
+                bookmarkedStoriesList = bookmarkedStoriesList.filter(id => id !== story.id);
+                document.getElementById("btn-bookmark-toggle").innerText = "🔖 BOOKMARK";
+            } else {
+                bookmarkedStoriesList.push(story.id);
+                document.getElementById("btn-bookmark-toggle").innerText = "🔖 BOOKMARKED";
+            }
+            localStorage.setItem("story_bookmarks", JSON.stringify(bookmarkedStoriesList));
+            evaluateAchievementsBadgesUnlockState();
+        }
+
+        function toggleFavoriteStory(storyId, node) {
+            if (favoriteStoriesList.includes(storyId)) {
+                favoriteStoriesList = favoriteStoriesList.filter(id => id !== storyId);
+                node.classList.remove("is-fav");
+            } else {
+                favoriteStoriesList.push(storyId);
+                node.classList.add("is-fav");
+            }
+            localStorage.setItem("story_favorites", JSON.stringify(favoriteStoriesList));
+        }
+
+        function openFeaturedHeroStory() {
+            openStoryReadingTheatre("damodara");
+        }
+
+        /* --- Badges Assessment Mechanism Engine --- */
+        function evaluateAchievementsBadgesUnlockState() {
+            let recent = JSON.parse(localStorage.getItem("story_recent_read") || "[]");
+            
+            if(recent.length >= 1) document.getElementById("badge-first").classList.add("unlocked");
+            if(recent.length >= 4) document.getElementById("badge-ten").classList.add("unlocked");
+            if(bookmarkedStoriesList.length >= 1) document.getElementById("badge-fav").classList.add("unlocked");
+        }
+
+        /* --- Living AI Character Animation State Machinery Loops --- */
+        const aiStatesPoolList = ['smile', 'blink', 'readLeaf'];
+        let lastPlayedAILine = "";
+
+        function initializeCharacterBehaviorLoop() {
+            let nextPool = aiStatesPoolList.filter(st => st !== lastPlayedAILine);
+            let targetState = nextPool[Math.floor(Math.random() * nextPool.length)];
+            lastPlayedAILine = targetState;
+
+            applyAvatarAnimationState(targetState);
+            setTimeout(initializeCharacterBehaviorLoop, Math.random() * 5000 + 6000);
+        }
+
+        function applyAvatarAnimationState(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            const avatar = document.getElementById("sitting-krishna-avatar");
+
+            elL.setAttribute("d", "M42 56 Q45 54 47 56");
+            elR.setAttribute("d", "M53 56 Q55 54 58 56");
+            smile.setAttribute("d", "M45 64 Q50 68 55 64");
+            avatar.style.transform = "scale(1)";
+
+            switch (state) {
+                case 'blink':
+                    elL.setAttribute("d", "M42 56 L47 56");
+                    elR.setAttribute("d", "M53 56 L58 56");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M43 62 Q50 72 57 62");
+                    avatar.style.transform = "scale(1.03)";
+                    break;
+                case 'readLeaf':
+                    elL.setAttribute("d", "M43 58 Q45 56 47 58");
+                    elR.setAttribute("d", "M53 58 Q55 56 58 58");
+                    break;
+            }
+        }
+
+        function triggerCharacterJoyfulReaction() {
+            applyAvatarAnimationState('smile');
+            const bubble = document.getElementById("avatar-talk-bubble");
+            bubble.innerText = DYNAMIC_SPEECH_LINES[Math.floor(Math.random() * DYNAMIC_SPEECH_LINES.length)];
+            bubble.classList.add("visible");
+            setTimeout(() => bubble.classList.remove("visible"), 3500);
+        }
+    </script>
+</body>
+</html>
