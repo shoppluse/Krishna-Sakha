@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - My Journal & Devotional Journey</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.4s;
+            --glass-bg: rgba(7, 30, 61, 0.75);
+            --glass-border: rgba(241, 196, 15, 0.3);
+        }
+
+        /* --- Reset & Immersive Foundation --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        /* --- Animated Sunrise Landscape Background Canvas --- */
+        #profile-ambient-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .sunrise-glow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(255, 159, 67, 0.15) 0%, rgba(241, 196, 15, 0.05) 50%, rgba(2, 11, 20, 0.4) 100%);
+        }
+
+        /* --- App Container Layout --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 15px 110px 15px;
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(241,196,15,0.1);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.6rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .date-badge {
+            font-family: 'Cinzel', serif;
+            background: rgba(243, 156, 18, 0.15);
+            border: 1px solid var(--gold-primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        /* --- Workspace Architecture --- */
+        .workspace-grid {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        @media (max-width: 950px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Left Column: Animated Standing Krishna Companion --- */
+        .companion-sanctum {
+            background: rgba(4, 19, 41, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 460px;
+            justify-content: space-between;
+        }
+
+        .speech-bubble {
+            background: var(--text-light);
+            color: var(--deep-blue);
+            padding: 10px 16px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            max-width: 220px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            position: absolute;
+            top: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            z-index: 15;
+        }
+
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--text-light) transparent;
+        }
+
+        .speech-bubble.visible { opacity: 1; transform: translateY(0); }
+
+        .avatar-standing-dome {
+            height: 280px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: auto;
+        }
+
+        .krishna-standing-vector {
+            width: 140px;
+            height: 210px;
+            z-index: 3;
+            transform-origin: bottom center;
+            transition: transform 0.6s ease;
+        }
+
+        /* --- Right Column: Journal & Statistics Workspace --- */
+        .journal-sanctuary {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Large Premium Profile Customizer Card */
+        .profile-master-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 25px;
+            align-items: center;
+        }
+
+        @media (max-width: 650px) {
+            .profile-master-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+                justify-items: center;
+            }
+        }
+
+        .avatar-uploader-frame {
+            width: 100px;
+            height: 100px;
+            border: 2px dashed var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            background: rgba(2, 11, 20, 0.4);
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .avatar-uploader-frame:hover {
+            border-color: var(--gold-light);
+        }
+
+        .avatar-preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hidden-file-input {
+            display: none;
+        }
+
+        .profile-details-inputs h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .editable-name-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed var(--gold-primary);
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            padding: 2px 5px;
+        }
+
+        .profile-meta-subtext {
+            font-size: 0.85rem;
+            color: #a4b0be;
+            margin-top: 8px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Devotional Statistics Matrix Cards Grid */
+        .stats-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-premium-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .stat-premium-card:hover {
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(241,196,15,0.1);
+        }
+
+        .stat-icon-box {
+            width: 44px;
+            height: 44px;
+            background: rgba(2, 11, 20, 0.5);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--gold-light);
+            border: 1px solid rgba(251, 197, 49, 0.2);
+        }
+
+        .stat-details-box h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: #a4b0be;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-details-box p {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: #fff;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* Achievements Badges Matrix Grid */
+        .section-headline-title {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+            padding-bottom: 6px;
+            margin-bottom: 15px;
+        }
+
+        .badges-grid-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement-badge-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.3;
+            transition: all 0.4s ease;
+        }
+
+        .achievement-badge-card.unlocked-badge {
+            opacity: 1;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 12px rgba(241,196,15,0.15);
+            animation: gentleFloat 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-4px); }
+        }
+
+        .badge-visual-emblem {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .badge-title-lbl {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-light);
+            line-height: 1.2;
+        }
+
+        /* Dynamic Timeline Memories Deck */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid rgba(241,196,15,0.2);
+            margin-left: 10px;
+        }
+
+        .timeline-event-node {
+            position: relative;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #dcdde1;
+        }
+
+        .timeline-event-node::before {
+            content: "🌸";
+            position: absolute;
+            left: -29px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            background: #020b14;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        /* Photos Darshan Gallery System */
+        .snapshots-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+
+        .gallery-empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 30px;
+            color: #a4b0be;
+            font-style: italic;
+            font-size: 0.85rem;
+            background: rgba(255,255,255,0.01);
+            border-radius: 6px;
+            border: 1px dashed rgba(255,255,255,0.05);
+        }
+
+        /* Settings Actions Control Block */
+        .danger-zone-settings {
+            background: rgba(192, 57, 43, 0.05);
+            border: 1px solid rgba(192, 57, 43, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-danger-action {
+            background: rgba(192, 57, 43, 0.2);
+            border: 1px solid #c0392b;
+            color: #ff8282;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-danger-action:hover {
+            background: #c0392b;
+            color: #fff;
+        }
+
+        /* --- Global Bottom Navigation Framework --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 800px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 6px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #a4b0be;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            margin-bottom: 3px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-light);
+            background: rgba(255,255,255,0.04);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="profile-ambient-canvas"></canvas>
+    <div class="sunrise-glow-overlay"></div>
+
+    <div class="app-container">
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="window.history.back();">← RETURN</button>
+                <h1 class="page-title">MY DEVOTIONAL JOURNAL</h1>
+            </div>
+            <div class="date-badge" id="live-date-lbl">Loading Sanctum Date...</div>
+        </header>
+
+        <div class="workspace-grid">
+            
+            <aside class="companion-sanctum">
+                <div class="speech-bubble" id="avatar-journal-speech">...</div>
+
+                <div class="avatar-standing-dome">
+                    <svg class="krishna-standing-vector" id="standing-krishna-avatar" viewBox="0 0 100 150">
+                        <circle cx="50" cy="42" r="17" fill="#1e272e"/>
+                        <circle id="complexion-node" cx="50" cy="45" r="13" fill="#74b9ff"/> <path d="M35 33 L50 8 L65 33 Z" fill="#f1c40f" stroke="#f39c12"/>
+                        <path d="M50 8 Q60 -8 55 -15 Q44 -8 50 8" fill="#009432"/>
+                        <path id="eye-l" d="M42 44 Q45 42 47 44" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="eye-r" d="M53 44 Q55 42 58 44" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                        <path id="krishna-smile" d="M45 51 Q50 55 55 51" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+                        <path d="M36 58 L64 58 L68 96 L32 96 Z" fill="#f1c40f"/>
+                        <path d="M43 58 Q50 82 57 58" fill="none" stroke="#e67e22" stroke-width="1"/>
+                        <rect x="40" y="96" width="6" height="34" rx="3" fill="#74b9ff"/>
+                        <rect x="54" y="96" width="6" height="34" rx="3" fill="#74b9ff"/>
+                    </svg>
+                </div>
+            </aside>
+
+            <main class="journal-sanctuary">
+                
+                <section class="profile-master-card">
+                    <div class="avatar-uploader-frame" onclick="triggerHiddenFileInputClick()" title="Click to upload profile avatar picture">
+                        <span id="uploader-placeholder-lbl" style="font-size: 0.7rem; color:#a4b0be; text-align:center; padding:5px;">📸 Upload Image</span>
+                        <img id="avatar-display-node" class="avatar-preview-img" style="display: none;" alt="User Profile Image">
+                        <input type="file" id="hidden-avatar-file-node" class="hidden-file-input" accept="image/*" onchange="processProfileAvatarUpload(this)">
+                    </div>
+                    <div class="profile-details-inputs">
+                        <input type="text" id="player-name-editable-node" class="editable-name-input" value="Devoted Companion" onchange="commitProfileNameChange(this.value)" title="Click to rename your profile">
+                        <div class="profile-meta-subtext">
+                            <span>📅 Joined: <span id="join-date-lbl">June 2026</span></span>
+                            <span>✨ Day Streak: <span id="streak-count-lbl">1</span></span>
+                            <span>🔥 Longest Streak: <span id="longest-streak-lbl">1</span></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4 class="section-headline-title">MY DEVOTIONAL MILESTONES</h4>
+                    <div class="stats-grid-container">
+                        <div class="stat-premium-card">
+                            <div class="stat-icon-box">🍯</div>
+                            <div class="stat-details-box"><h5>Bhoga Offerings</h5><p id="stat-bhoga-lbl">0</p></div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-icon-box">🪔</div>
+                            <div class="stat-details-box"><h5>Aratis Offered</h5><p id="stat-arati-lbl">0</p></div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-icon-box">📖</div>
+                            <div class="stat-details-box"><h5>Pastimes Read</h5><p id="stat-stories-lbl">0</p></div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-icon-box">📿</div>
+                            <div class="stat-details-box"><h5>Japa Rounds</h5><p id="stat-japa-lbl">0</p></div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-icon-box">🎵</div>
+                            <div class="stat-details-box"><h5>Kirtan Hours</h5><p id="stat-kirtan-lbl">0.0h</p></div>
+                        </div>
+                        <div class="stat-premium-card">
+                            <div class="stat-icon-box">🌿</div>
+                            <div class="stat-details-box"><h5>Walk Distance</h5><p id="stat-walk-lbl">0 m</p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4 class="section-headline-title">UNLOCKED BLESSINGS & BADGES</h4>
+                    <div class="badges-grid-matrix" id="badges-matrix-grid-node">
+                        <div class="achievement-badge-card" id="badge-bhoga">
+                            <div class="badge-visual-emblem">🌸</div>
+                            <div class="badge-title-lbl">First Offering</div>
+                        </div>
+                        <div class="achievement-badge-card" id="badge-arati">
+                            <div class="badge-visual-emblem">🪔</div>
+                            <div class="badge-title-lbl">First Arati</div>
+                        </div>
+                        <div class="achievement-badge-card" id="badge-stories">
+                            <div class="badge-visual-emblem">📖</div>
+                            <div class="badge-title-lbl">Story Explorer</div>
+                        </div>
+                        <div class="achievement-badge-card" id="badge-japa">
+                            <div class="badge-visual-emblem">📿</div>
+                            <div class="badge-title-lbl">Daily Japa</div>
+                        </div>
+                        <div class="achievement-badge-card" id="badge-kirtan">
+                            <div class="badge-visual-emblem">🎵</div>
+                            <div class="badge-title-lbl">Kirtan Listener</div>
+                        </div>
+                        <div class="achievement-badge-card" id="badge-walk">
+                            <div class="badge-visual-emblem">🌿</div>
+                            <div class="badge-title-lbl">Vrindavan Explorer</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4 class="section-headline-title">DEVOTIONAL TIMELINE LOGS</h4>
+                    <div class="timeline-container" id="timeline-logs-feed-box">
+                        </div>
+                </section>
+
+                <section>
+                    <h4 class="section-headline-title">DARSHAN PICTURES SNAPSHOTS</h4>
+                    <div class="snapshots-gallery-grid" id="gallery-snapshots-deck">
+                        <div class="gallery-empty-state">Darshan snapshots captured in the Dress or Vrindavan exploration screens display here automatically...</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4 class="section-headline-title">JOURNAL ARCHIVE UTILITIES</h4>
+                    <div class="danger-zone-settings">
+                        <button class="btn-back" style="font-size: 0.8rem;" onclick="exportJournalProgressMatrix()">📤 EXPORT JOURNAL DATA</button>
+                        <button class="btn-danger-action" onclick="executeDestructiveJournalReset()">⚠️ RESET JOURNAL PROGRESS</button>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+        <footer class="bottom-nav">
+            <a class="nav-item" onclick="location.href='index.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+            <a class="nav-item" onclick="location.href='play.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Play</a>
+            <a class="nav-item" onclick="location.href='bhoga.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Bhoga</a>
+            <a class="nav-item" onclick="location.href='arati.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H7"/></svg>Arati</a>
+            <a class="nav-item" onclick="location.href='dress.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Dress</a>
+            <a class="nav-item" onclick="location.href='stories.html';"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Stories</a>
+            <a class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>Profile</a>
+        </footer>
+    </div>
+
+    <script>
+        /* ================= REGISTRY DECLARATIONS & STORAGE CONSTANTS CONFIGS ================= */
+        const DIVINE_WELCOME_LINES = [
+            "Welcome back to your spiritual journal, Sakha. Your devotion continues to expand.",
+            "I am genuinely happy to view your time logs here in Vrindavan again.",
+            "Every single step of your devotional journey lingers as an immortal memory."
+        ];
+
+        /* --- Ambient Scenery Dynamics Canvas Render Processing Engine --- */
+        const canvas = document.getElementById('profile-ambient-canvas');
+        const ctx = canvas.getContext('2d');
+        let environmentalParticlesArray = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class DawnJournalParticle {
+            constructor(type) {
+                this.type = type; // 'petal', 'sparkle'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 1.2;
+                this.speedY = this.type === 'petal' ? (Math.random() * 0.4 + 0.15) : -(Math.random() * 0.3 + 0.1);
+                this.speedX = Math.random() * 0.6 - 0.3;
+                this.alpha = Math.random() * 0.5 + 0.2;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30 || this.y > canvas.height + 30 || this.x < -30 || this.x > canvas.width + 30) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                if(this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#ff7675"; // Vibrant loose flower petal drops 
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size * 1.4, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = "rgba(241, 196, 15, 0.5)"; // Soft golden sunrise light spark
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Populate Initial Scenery Environmental Particles Stack Array
+        for(let i=0; i<12; i++) environmentalParticlesArray.push(new DawnJournalParticle('petal'));
+        for(let i=12; i<32; i++) environmentalParticlesArray.push(new DawnJournalParticle('sparkle'));
+
+        function runSceneryGraphicsEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            skyGrad.addColorStop(0, '#04152d');
+            skyGrad.addColorStop(0.6, '#0c2e56');
+            skyGrad.addColorStop(1, '#19253d');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for(let node of environmentalParticlesArray) {
+                node.update();
+                node.draw();
+            }
+            requestAnimationFrame(runSceneryGraphicsEngine);
+        }
+        runSceneryGraphicsEngine();
+
+        /* --- Life-cycle Initializations & Storage Operations --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("live-date-lbl").innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+            loadJournalDataFromStorage();
+            initializeCharacterBehaviorLoop();
+            triggerCharacterSpeechSequence();
+        });
+
+        function loadJournalDataFromStorage() {
+            // Personal Details Load/Fallbacks
+            let pName = localStorage.getItem("profile_player_name") || "Devoted Companion";
+            let joinDate = localStorage.getItem("profile_join_date") || "June 2026";
+            let streak = localStorage.getItem("bhoga_streak") || localStorage.getItem("arati_streak") || "1";
+            let longestStreak = localStorage.getItem("profile_longest_streak") || "1";
+            let imgData = localStorage.getItem("profile_avatar_base64");
+
+            document.getElementById("player-name-editable-node").value = pName;
+            document.getElementById("join-date-lbl").innerText = joinDate;
+            document.getElementById("streak-count-lbl").innerText = streak;
+            document.getElementById("longest-streak-lbl").innerText = longestStreak;
+
+            if (imgData) {
+                document.getElementById("uploader-placeholder-lbl").style.display = "none";
+                const img = document.getElementById("avatar-display-node");
+                img.src = imgData;
+                img.style.display = "block";
+            }
+
+            // Devotional Milestones Counters Load/Fallbacks
+            let bhogaCount = parseInt(localStorage.getItem("bhoga_total") || "0");
+            let aratiCount = parseInt(localStorage.getItem("arati_total") || "0");
+            let storiesRead = JSON.parse(localStorage.getItem("story_recent_read") || "[]").length;
+            let japaCount = parseInt(localStorage.getItem("japa_today_rounds") || "0");
+            let kirtanTime = (parseInt(localStorage.getItem("kirtan_duration") || "0") / 3600).toFixed(1);
+            let walkSteps = parseInt(localStorage.getItem("vrindavan_steps") || "0");
+
+            document.getElementById("stat-bhoga-lbl").innerText = bhogaCount;
+            document.getElementById("stat-arati-lbl").innerText = aratiCount;
+            document.getElementById("stat-stories-lbl").innerText = storiesRead;
+            document.getElementById("stat-japa-lbl").innerText = japaCount;
+            document.getElementById("stat-kirtan-lbl").innerText = `${kirtanTime}h`;
+            document.getElementById("stat-walk-lbl").innerText = `${walkSteps} m`;
+
+            // Evaluate Badges Allocation
+            if (bhogaCount > 0) document.getElementById("badge-bhoga").classList.add("unlocked-badge");
+            if (aratiCount > 0) document.getElementById("badge-arati").classList.add("unlocked-badge");
+            if (storiesRead > 0) document.getElementById("badge-stories").classList.add("unlocked-badge");
+            if (japaCount > 0) document.getElementById("badge-japa").classList.add("unlocked-badge");
+            if (parseFloat(kirtanTime) > 0) document.getElementById("badge-kirtan").classList.add("unlocked-badge");
+            if (walkSteps > 0) document.getElementById("badge-walk").classList.add("unlocked-badge");
+
+            // Compile Dynamic Memories Log Timeline
+            compileDevotionalLogsTimeline(bhogaCount, aratiCount, storiesRead, japaCount);
+        }
+
+        function compileDevotionalLogsTimeline(bhoga, arati, stories, japa) {
+            const feed = document.getElementById("timeline-logs-feed-box");
+            feed.innerHTML = "";
+
+            let events = [
+                { cond: true, text: "Began sacred spiritual journey inside the Krishna Sakha companion sanctuary." }
+            ];
+
+            if (bhoga > 0) events.push({ cond: true, text: `Successfully offered ${bhoga} direct loving food offerings plates to Child Krishna.` });
+            if (arati > 0) events.push({ cond: true, text: `Performed ${arati} complete beautifully illuminated interactive Arati sequences.` });
+            if (stories > 0) events.push({ cond: true, text: `Explored and contemplated over ${stories} timeless sweet childhood pastimes of Vraja.` });
+            if (japa > 0) events.push({ cond: true, text: `Conducted meditative sound alignment via focused Japa beads counting rounds.` });
+
+            events.forEach(ev => {
+                let node = document.createElement("div");
+                node.className = "timeline-event-node";
+                node.innerText = ev.text;
+                feed.appendChild(node);
+            });
+        }
+
+        /* --- Personal Details Editing Modifications Real-time Sync --- */
+        function commitProfileNameChange(val) {
+            let sanitized = val.trim();
+            if (sanitized !== "") {
+                localStorage.setItem("profile_player_name", sanitized);
+                triggerCharacterJoyfulReaction();
+            }
+        }
+
+        function triggerHiddenFileInputClick() {
+            document.getElementById("hidden-avatar-file-node").click();
+        }
+
+        function processProfileAvatarUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data64 = e.target.result;
+                    localStorage.setItem("profile_avatar_base64", data64);
+                    
+                    document.getElementById("uploader-placeholder-lbl").style.display = "none";
+                    const img = document.getElementById("avatar-display-node");
+                    img.src = data64;
+                    img.style.display = "block";
+                    
+                    triggerCharacterJoyfulReaction();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        /* --- Progress Utilities Action Controls --- */
+        function exportJournalProgressMatrix() {
+            let backup = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                backup[key] = localStorage.getItem(key);
+            }
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup));
+            let dlAnchorNode = document.createElement('a');
+            dlAnchorNode.setAttribute("href", dataStr);
+            dlAnchorNode.setAttribute("download", "krishna_sakha_journal_progress.json");
+            document.body.appendChild(dlAnchorNode);
+            dlAnchorNode.click();
+            dlAnchorNode.remove();
+        }
+
+        function executeDestructiveJournalReset() {
+            let confirmation = confirm("Are you completely sure you want to clear your devotional journal progress logs inside this browser? Your beautiful gathered memories will be reset.");
+            if (confirmation) {
+                localStorage.clear();
+                alert("Journal progress restored to default state.");
+                location.reload();
+            }
+        }
+
+        /* --- Standing Avatar Behavioral Micro-Animations Loops Engine --- */
+        const dynamicBehaviorsList = ['smile', 'blink', 'lookRight'];
+        let lastPlayedBehavior = "";
+
+        function initializeCharacterBehaviorLoop() {
+            let nextPool = dynamicBehaviorsList.filter(b => b !== lastPlayedBehavior);
+            let chosen = nextPool[Math.floor(Math.random() * nextPool.length)];
+            lastPlayedBehavior = chosen;
+
+            applyRigBehaviorState(chosen);
+            setTimeout(initializeCharacterBehaviorLoop, Math.random() * 5000 + 6000);
+        }
+
+        function applyRigBehaviorState(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            const avatar = document.getElementById("standing-krishna-avatar");
+
+            elL.setAttribute("d", "M42 44 Q45 42 47 44");
+            elR.setAttribute("d", "M53 44 Q55 42 58 44");
+            smile.setAttribute("d", "M45 51 Q50 55 55 51");
+            avatar.style.transform = "scale(1)";
+
+            switch(state) {
+                case 'blink':
+                    elL.setAttribute("d", "M42 44 L47 44");
+                    elR.setAttribute("d", "M53 44 L58 44");
+                    break;
+                case 'smile':
+                    smile.setAttribute("d", "M43 49 Q50 59 57 49");
+                    avatar.style.transform = "scale(1.03)";
+                    break;
+                case 'lookRight':
+                    // Turns gaze toward profile card elements
+                    elL.setAttribute("d", "M44 44 Q46 42 48 44");
+                    elR.setAttribute("d", "M55 44 Q57 42 59 44");
+                    smile.setAttribute("d", "M44 50 Q49 57 54 50");
+                    break;
+            }
+        }
+
+        function triggerCharacterSpeechSequence() {
+            const bubble = document.getElementById("avatar-journal-speech");
+            bubble.innerText = DIVINE_WELCOME_LINES[Math.floor(Math.random() * DIVINE_WELCOME_LINES.length)];
+            bubble.classList.add("visible");
+            setTimeout(() => bubble.classList.remove("visible"), 4500);
+        }
+
+        function triggerCharacterJoyfulReaction() {
+            applyRigBehaviorState('smile');
+            const bubble = document.getElementById("avatar-journal-speech");
+            bubble.innerText = "Splendid modifications, Sakha! Your journal feels personal.";
+            bubble.classList.add("visible");
+            setTimeout(() => bubble.classList.remove("visible"), 2500);
+        }
+    </script>
+</body>
+</html>
