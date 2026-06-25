@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sakha - Sanctum Play</title>
+    <style>
+        /* --- Premium Typography & Variables (Preserved From Project Design Language) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap');
+
+        :root {
+            --gold-primary: #f39c12;
+            --gold-light: #f1c40f;
+            --gold-glow: rgba(241, 196, 15, 0.6);
+            --peacock-blue: #0a3d62;
+            --deep-blue: #071e3d;
+            --text-light: #f5f6fa;
+            --transition-speed: 0.5s;
+            --glass-bg: rgba(7, 30, 61, 0.7);
+            --glass-border: rgba(241, 196, 15, 0.3);
+            
+            /* Dynamic cycle defaults (Morning) */
+            --sky-gradient: linear-gradient(180deg, #ff9f43 0%, #feca57 40%, #ffffea 100%);
+            --ambient-glow: rgba(255, 159, 67, 0.15);
+        }
+
+        /* --- Reset & Immersive Base --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #020b14;
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        /* --- Dynamic Environment Canvas & Filter Layers --- */
+        #vrindavan-sky-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--sky-gradient);
+            z-index: 1;
+            transition: background var(--transition-speed) ease;
+        }
+
+        #scenery-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .ambient-lighting-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+            background: var(--ambient-glow);
+            transition: background var(--transition-speed) ease;
+        }
+
+        /* --- Immersive Master Layout Structure --- */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+        }
+
+        /* --- Top Navigation Bar --- */
+        .top-nav {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(241,196,15,0.1);
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .page-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--gold-light);
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .time-badge, .streak-badge {
+            font-family: 'Cinzel', serif;
+            background: rgba(7, 30, 61, 0.6);
+            border: 1px solid var(--glass-border);
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: var(--gold-light);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .btn-icon:hover {
+            box-shadow: 0 0 10px var(--gold-glow);
+            background: rgba(241,196,15,0.1);
+        }
+
+        /* --- Living Interactive Center Stage --- */
+        .living-stage {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin: 15px auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        /* Living Speech Presentation Box */
+        .speech-bubble {
+            position: absolute;
+            bottom: 250px;
+            background: var(--text-light);
+            color: var(--deep-blue);
+            padding: 10px 18px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            max-width: 250px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+            z-index: 15;
+            text-align: center;
+        }
+
+        .speech-bubble::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: var(--text-light) transparent;
+        }
+
+        .speech-bubble.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Scalable Vector Living Krishna Avatar Rig */
+        .avatar-wrapper {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 200px;
+            z-index: 10;
+            cursor: pointer;
+            transform-origin: bottom center;
+            transition: left 4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s ease;
+        }
+
+        .krishna-avatar-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* --- Floating Mini Activities Control Panel Stack --- */
+        .activities-panel {
+            position: absolute;
+            left: 15px;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 20;
+            max-width: 200px;
+        }
+
+        @media (max-width: 768px) {
+            .activities-panel {
+                left: 0;
+                top: 0;
+                position: relative;
+                flex-direction: row;
+                max-width: 100%;
+                overflow-x: auto;
+                padding-bottom: 5px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .activity-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .activity-card:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 12px var(--gold-glow);
+            transform: scale(1.03);
+            background: rgba(10, 61, 98, 0.6);
+        }
+
+        /* --- Bottom Global Navigation Framework --- */
+        .bottom-nav {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 30px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            padding: 6px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #a4b0be;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 8px 0;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 3px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            transition: transform 0.3s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--gold-light);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .nav-item:hover svg {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="vrindavan-sky-layer"></div>
+    <canvas id="scenery-canvas"></canvas>
+    <div class="ambient-lighting-overlay"></div>
+
+    <div class="app-container">
+        <header class="top-nav">
+            <div class="nav-left">
+                <button class="btn-back" onclick="location.href='index.html';">← EXIT</button>
+                <h1 class="page-title">VRINDAVAN SANCTUM</h1>
+            </div>
+            <div class="nav-right">
+                <div class="time-badge" id="environment-time-lbl">Morning</div>
+                <div class="streak-badge">✨ STREAK: <span id="streak-lbl">0</span></div>
+                <button class="btn-icon" title="Cycle Time Mode" onclick="manualCycleEnvironmentTime()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="living-stage" id="stage-arena">
+            
+            <nav class="activities-panel">
+                <div class="activity-card" onclick="triggerMiniActivity('ball')">⚽ Play Ball</div>
+                <div class="activity-card" onclick="triggerMiniActivity('calf')">🐄 Feed Calf</div>
+                <div class="activity-card" onclick="triggerMiniActivity('flowers')">🌸 Pick Flowers</div>
+                <div class="activity-card" onclick="triggerMiniActivity('flute')">🎵 Play Flute</div>
+                <div class="activity-card" onclick="triggerMiniActivity('butterflies')">🦋 Watch Butterflies</div>
+                <div class="activity-card" onclick="triggerMiniActivity('tree')">🌳 Sit Under Tree</div>
+            </nav>
+
+            <div class="speech-bubble" id="avatar-speech-node">...</div>
+
+            <div class="avatar-wrapper" id="krishna-avatar-node" onclick="handleAvatarInteraction()">
+                <svg class="krishna-avatar-svg" viewBox="0 0 100 150">
+                    <path d="M34 35 L50 8 L66 35 Z" fill="#f1c40f" stroke="#f39c12" stroke-width="1.5" />
+                    <circle cx="50" cy="19" r="3" fill="#e74c3c"/>
+                    <path id="peacock-feather" d="M50 8 Q62 -8 56 -18 Q46 -8 50 8" fill="#009432" stroke="#0652dd" stroke-width="1"/>
+                    
+                    <circle cx="50" cy="45" r="18" fill="#2c3e50"/>
+                    <circle id="krishna-face" cx="50" cy="48" r="14" fill="#74b9ff"/> <path d="M49 37 L51 37 L50 44 Z" fill="#fff"/> <circle cx="50" cy="42" r="1" fill="#e74c3c"/>
+                    <path id="eye-l" d="M42 46 Q45 44 47 46" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                    <path id="eye-r" d="M53 46 Q55 44 58 46" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                    <path id="krishna-smile" d="M46 54 Q50 58 54 54" fill="none" stroke="#c0392b" stroke-width="1.5"/>
+                    
+                    <path d="M38 62 Q50 78 62 62" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="3 2"/> <path d="M36 62 L64 62 L68 98 L32 98 Z" fill="#f1c40f"/>
+                    <path d="M42 62 Q50 90 58 62" fill="none" stroke="#e67e22" stroke-width="1.2"/>
+                    
+                    <rect id="divine-flute" x="30" y="50" width="44" height="3.5" rx="1.5" fill="#d35400" transform="rotate(-10 50 52)" style="display:none;"/>
+                </svg>
+            </div>
+        </main>
+
+        <footer class="bottom-nav">
+            <a class="nav-item" onclick="location.href='index.html';"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+            <a class="nav-item active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>Play</a>
+            <a class="nav-item" onclick="location.href='bhoga.html';"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Bhoga</a>
+            <a class="nav-item" onclick="location.href='arati.html';"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H7"/></svg>Arati</a>
+            <a class="nav-item" onclick="location.href='stories.html';"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></svg>Stories</a>
+            <a class="nav-item" onclick="location.href='profile.html';"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>Profile</a>
+        </footer>
+    </div>
+
+    <script>
+        /* --- Living AI Engine State Declarations --- */
+        const TIMECYCLES = {
+            Morning: { sky: "linear-gradient(180deg, #ff9f43 0%, #feca57 40%, #ffffea 100%)", ambient: "rgba(255, 159, 67, 0.12)", filter: 43 },
+            Afternoon: { sky: "linear-gradient(180deg, #45aaf2 0%, #4b7bec 60%, #a5d6a7 100%)", ambient: "rgba(255, 255, 255, 0)", filter: 200 },
+            Evening: { sky: "linear-gradient(180deg, #eb3b5a 0%, #fa8231 50%, #20bf6b 100%)", ambient: "rgba(250, 130, 49, 0.2)", filter: 25 },
+            Night: { sky: "linear-gradient(180deg, #0f172a 0%, #1e1b4b 50%, #020617 100%)", ambient: "rgba(99, 102, 241, 0.15)", filter: 240 }
+        };
+
+        const SPEECH_REPOSITORIES = [
+            "Hare Krishna! Joyful presence fills Vrindavan today.",
+            "Welcome back, Sakha. Let's play together near the Yamuna river.",
+            "Look at the butterflies dancing! Aren't they wonderful?",
+            "Would you like to hear a blissful pastime story today?",
+            "Come closer, let's chant together in the shade of the Kadamba tree."
+        ];
+
+        const INTERACTION_REACTIONS = ['smile', 'wave', 'flute', 'laugh', 'jump', 'dance'];
+
+        let currentCycleIndex = 0;
+        let cycleKeys = Object.keys(TIMECYCLES);
+        let autonomousAnimationRunning = false;
+        let lastPlayedAction = "";
+
+        /* --- Local Metrics Synchronizations --- */
+        let interactionsCount = parseInt(localStorage.getItem("play_interactions") || "0");
+        let playtimeAccumulated = parseInt(localStorage.getItem("play_duration") || "0");
+
+        /* --- Scenery Graphics Simulation Frame Canvas Engine --- */
+        const canvas = document.getElementById('scenery-canvas');
+        const ctx = canvas.getContext('2d');
+        let environmentalParticles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class ParticleAsset {
+            constructor(type) {
+                this.type = type; // 'petal', 'butterfly', 'firefly', 'cloud'
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = this.type === 'petal' ? -20 : Math.random() * canvas.height;
+                this.size = Math.random() * 4 + 2;
+                this.speedY = this.type === 'petal' ? (Math.random() * 0.7 + 0.3) : (Math.random() * 0.4 - 0.2);
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.alpha = Math.random() * 0.6 + 0.3;
+                this.angle = Math.random() * Math.PI;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if(this.type === 'butterfly') {
+                    this.speedX += (Math.random() * 0.2 - 0.1);
+                    this.speedY += (Math.random() * 0.2 - 0.1);
+                }
+                if (this.y < -40 || this.y > canvas.height + 40 || this.x < -40 || this.x > canvas.width + 40) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = this.alpha;
+                
+                if(this.type === 'petal') {
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = "#ff7675";
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size * 1.5, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if(this.type === 'butterfly') {
+                    ctx.fillStyle = "#fd9644";
+                    ctx.beginPath();
+                    ctx.ellipse(-3, 0, this.size, this.size*1.2, 0, 0, Math.PI*2);
+                    ctx.ellipse(3, 0, this.size, this.size*1.2, 0, 0, Math.PI*2);
+                    ctx.fill();
+                } else {
+                    // Firefly/Cosmic sparkles
+                    ctx.fillStyle = "#f1c40f";
+                    ctx.shadowBlur = 6;
+                    ctx.shadowColor = "#f1c40f";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Initialize Background Matrix Pool Arrays
+        for(let i=0; i<15; i++) environmentalParticles.push(new ParticleAsset('petal'));
+        for(let i=0; i<10; i++) environmentalParticles.push(new ParticleAsset('butterfly'));
+        for(let i=0; i<15; i++) environmentalParticles.push(new ParticleAsset('firefly'));
+
+        function runScenerySimulationEngine() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Render baseline traditional landscape framing constructs softly via canvas
+            ctx.fillStyle = "rgba(46, 204, 113, 0.15)"; // Soft far ground overlay
+            ctx.beginPath();
+            ctx.ellipse(canvas.width*0.2, canvas.height, canvas.width*0.4, 120, 0, 0, Math.PI*2);
+            ctx.ellipse(canvas.width*0.8, canvas.height, canvas.width*0.5, 160, 0, 0, Math.PI*2);
+            ctx.fill();
+
+            for(let asset of environmentalParticles) {
+                asset.update();
+                asset.draw();
+            }
+            requestAnimationFrame(runScenerySimulationEngine);
+        }
+        runScenerySimulationEngine();
+
+        /* --- Life-cycle Initialization & Operations --- */
+        document.addEventListener("DOMContentLoaded", () => {
+            syncDashboardMetrics();
+            executeAutonomousAILoop();
+            executeSpeechScheduleLoop();
+            
+            // Continuous operational tracking accumulator
+            setInterval(() => {
+                playtimeAccumulated += 1;
+                localStorage.setItem("play_duration", playtimeAccumulated.toString());
+            }, 1000);
+        });
+
+        function syncDashboardMetrics() {
+            let streak = localStorage.getItem("play_streak") || "1";
+            document.getElementById("streak-lbl").innerText = streak;
+        }
+
+        /* --- Autonomous Behavior Logic Framework (Living AI) --- */
+        const aiBehaviorPool = ['walkLeft', 'walkRight', 'playFluteMode', 'smileStance', 'meditateMode', 'danceHappy'];
+
+        function executeAutonomousAILoop() {
+            if (autonomousAnimationRunning) return;
+
+            let filterPool = aiBehaviorPool.filter(act => act !== lastPlayedAction);
+            let targetAction = filterPool[Math.floor(Math.random() * filterPool.length)];
+            lastPlayedAction = targetAction;
+
+            applyAIVisualState(targetAction);
+            setTimeout(executeAutonomousAILoop, Math.random() * 5000 + 6000);
+        }
+
+        function applyAIVisualState(state) {
+            const elL = document.getElementById("eye-l");
+            const elR = document.getElementById("eye-r");
+            const smile = document.getElementById("krishna-smile");
+            const flute = document.getElementById("divine-flute");
+            const wrapper = document.getElementById("krishna-avatar-node");
+
+            // Safe Reset Morphing Parameters
+            elL.setAttribute("d", "M42 46 Q45 44 47 46");
+            elR.setAttribute("d", "M53 46 Q55 44 58 46");
+            smile.setAttribute("d", "M46 54 Q50 58 54 54");
+            flute.style.display = "none";
+            wrapper.style.transform = "scale(1)";
+
+            let randomStageOffset = Math.floor(Math.random() * 35) + 30;
+
+            switch(state) {
+                case 'walkLeft':
+                    wrapper.style.left = `${randomStageOffset - 12}%`;
+                    smile.setAttribute("d", "M45 53 Q50 56 55 53");
+                    break;
+                case 'walkRight':
+                    wrapper.style.left = `${randomStageOffset + 12}%`;
+                    break;
+                case 'playFluteMode':
+                    flute.style.display = "block";
+                    smile.setAttribute("d", "M48 54 Q50 55 52 54");
+                    wrapper.style.transform = "scale(1.04)";
+                    break;
+                case 'smileStance':
+                    smile.setAttribute("d", "M44 52 Q50 61 56 52");
+                    break;
+                case 'meditateMode':
+                    elL.setAttribute("d", "M42 46 L47 46");
+                    elR.setAttribute("d", "M53 46 L58 46");
+                    break;
+                case 'danceHappy':
+                    wrapper.style.transform = "translateY(-15px) scale(1.05) rotate(5deg)";
+                    smile.setAttribute("d", "M43 51 Q50 62 57 51");
+                    break;
+            }
+        }
+
+        /* --- Direct Interactive Controls Handlers --- */
+        function handleAvatarInteraction() {
+            interactionsCount += 1;
+            localStorage.setItem("play_interactions", interactionsCount.toString());
+
+            let reaction = INTERACTION_REACTIONS[Math.floor(Math.random() * INTERACTION_REACTIONS.length)];
+            autonomousAnimationRunning = true;
+
+            applyAIVisualState(reaction === 'flute' ? 'playFluteMode' : (reaction === 'dance' ? 'danceHappy' : 'smileStance'));
+            
+            const speech = document.getElementById("avatar-speech-node");
+            speech.innerText = "Hehe! I hear you, Sakha!";
+            speech.classList.add("visible");
+
+            setTimeout(() => {
+                speech.classList.remove("visible");
+                autonomousAnimationRunning = false;
+                executeAutonomousAILoop();
+            }, 2500);
+        }
+
+        function triggerMiniActivity(activityId) {
+            autonomousAnimationRunning = true;
+            applyAIVisualState('danceHappy');
+            
+            localStorage.setItem("play_fav_activity", activityId);
+
+            const speech = document.getElementById("avatar-speech-node");
+            speech.innerText = `Oh joyful choice! Let's perform the ${activityId} pastime exploration right now!`;
+            speech.classList.add("visible");
+
+            // Burst particle visuals directly into scene area
+            for(let i=0; i<15; i++) {
+                environmentalParticles.push(new ParticleAsset('sparkle'));
+            }
+
+            setTimeout(() => {
+                speech.classList.remove("visible");
+                autonomousAnimationRunning = false;
+                executeAutonomousAILoop();
+            }, 3500);
+        }
+
+        function executeSpeechScheduleLoop() {
+            if(autonomousAnimationRunning) {
+                setTimeout(executeSpeechScheduleLoop, 5000);
+                return;
+            }
+            const speech = document.getElementById("avatar-speech-node");
+            speech.innerText = SPEECH_REPOSITORIES[Math.floor(Math.random() * SPEECH_REPOSITORIES.length)];
+            speech.classList.add("visible");
+
+            setTimeout(() => {
+                speech.classList.remove("visible");
+                setTimeout(executeSpeechScheduleLoop, Math.random() * 8000 + 12000);
+            }, 4000);
+        }
+
+        /* --- Environmental Lighting Engine Configurations --- */
+        function manualCycleEnvironmentTime() {
+            currentCycleIndex = (currentCycleIndex + 1) % cycleKeys.length;
+            let currentKey = cycleKeys[currentCycleIndex];
+            
+            document.getElementById("environment-time-lbl").innerText = currentKey;
+            
+            // Morph layout root nodes parameters transitions
+            const config = TIMECYCLES[currentKey];
+            document.documentElement.style.setProperty('--sky-gradient', config.sky);
+            document.documentElement.style.setProperty('--ambient-glow', config.ambient);
+        }
+    </script>
+</body>
+</html>
